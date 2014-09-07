@@ -11,6 +11,6 @@ cv_url: http://conan.is/CV/
 
 # Build settings
 markdown: kramdown
-highlighter: rouge	
+highlighter: pygments	
 kramdown:
     smart_quotes: ["apos", "apos", "quot", "quot"]
