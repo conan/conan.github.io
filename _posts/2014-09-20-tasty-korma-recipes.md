@@ -99,6 +99,7 @@ Here we're taking the data map and running [`clojure.set/rename-keys`](http://cl
 
 {% endhighlight %}
 
+Note that when you insert a row into a table with an auto-generated primary key, Korma returns a map containing the `:GENERATED_KEY` for that row.  This now gets transformed to `:generated-key`.
 
 ## Join Types 
 
