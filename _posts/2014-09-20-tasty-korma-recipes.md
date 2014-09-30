@@ -5,7 +5,7 @@ date:   2014-09-20 16:00:00
 categories: korma clojure sql
 ---
 
-[Korma](http://sqlkorma.com/) is a handy library for SQL in Clojure; the [docs](http://sqlkorma.com/docs) are good, but sometimes an example is more useful.  Here are some handy things you can do (I've used MySQL but the techniques, like Korma, can be used with any relational database):
+[Korma](http://sqlkorma.com/) is a handy library for SQL in Clojure; the [docs](http://sqlkorma.com/docs) are good, but sometimes an example is more useful.  Here are some handy things you can do (I've used MySQL but the techniques, like Korma, can be used with any relational database), using Korma v0.4.0:
 
 
 ## Prepare/Transform
@@ -99,7 +99,7 @@ Here we're taking the data map and running [`clojure.set/rename-keys`](http://cl
 
 {% endhighlight %}
 
-Note that when you insert a row into a table with an auto-generated primary key, Korma returns a map containing the `:GENERATED_KEY` for that row.  This now gets transformed to `:generated-key`.
+Note that when you insert a row into a table with an auto-generated primary key, Korma returns a map containing the `:generated_key` for that row.  This now gets transformed to `:generated-key`.
 
 ## Join Types 
 
