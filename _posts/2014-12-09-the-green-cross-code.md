@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "The Green Cross Code"
+title:  "The Green Cross Code: Parallel Selenium In Clojure"
 date:   2014-12-09 16:00:00
 categories: webdriver selenium testing clojure
 ---
