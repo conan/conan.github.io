@@ -30,12 +30,13 @@ Browser configurations can be defined using whatever format your remote provider
 with Sauce Labs:
 
 {% highlight clojure %}
-(def browser-specs [{:browserName "chrome" :version "38" :platform "Windows 8.1"}
-                    {:browserName "safari" :version "8" :platform "OS X 10.10"}
-                    {:browserName "android" :version "4.4" :platform "LINUX"
-                     :device-orientation :portrait :deviceName "Google Nexus 7 HD Emulator"}
-                    {:browserName "iPhone" :version "8.1" :platform "OS X 10.9"
-                     :device-orientation :portrait}])
+(def browser-specs
+  [{:browserName "chrome" :version "38" :platform "Windows 8.1"}
+   {:browserName "safari" :version "8" :platform "OS X 10.10"}
+   {:browserName "android" :version "4.4" :platform "LINUX"
+    :device-orientation :portrait :deviceName "Google Nexus 7 HD Emulator"}
+   {:browserName "iPhone" :version "8.1" :platform "OS X 10.9"
+    :device-orientation :portrait}])
 {% endhighlight %}
 
 Each of your tests should be defined as Clojure functions taking a single argument - a WebDriver object.  They can

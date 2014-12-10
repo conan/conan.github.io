@@ -6,7 +6,7 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://conan.is" # the base hostname & protocol for your site
 twitter_username: ***REMOVED***
-github_username:  conan
+github_username: conan
 cv_url: http://conan.is/CV/
 
 # Build settings
