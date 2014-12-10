@@ -3,6 +3,7 @@ layout: post
 title:  "Tasty Korma Recipies"
 date:   2014-09-20 16:00:00
 categories: korma clojure sql
+comments: true
 ---
 
 [Korma](http://sqlkorma.com/) is a handy library for SQL in Clojure; the [docs](http://sqlkorma.com/docs) are good, but sometimes an example is more useful.  Here are some handy things you can do (I've used MySQL but the techniques, like Korma, can be used with any relational database), using Korma v0.4.0:

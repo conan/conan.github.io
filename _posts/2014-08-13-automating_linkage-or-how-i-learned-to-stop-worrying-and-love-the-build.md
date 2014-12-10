@@ -3,6 +3,7 @@ layout: post
 title:  "Automating Linkage or: How I Learned To Stop Worrying And Love The Build"
 date:   2014-08-18 16:00:00
 categories: bower gulp wiredep javascript
+comments: true
 ---
 # Building with Gulp.js
 
