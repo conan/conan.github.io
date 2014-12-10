@@ -3,6 +3,7 @@ layout: post
 title:  "Midje Rocks! Integration Testing In Clojure"
 date:   2014-04-14 16:23:15
 categories: clojure midje testing
+comments: true
 ---
 Clojure's great yeah- we write these tiny functions that do one thing well, and bury them in unit tests using our fave testing framework (mine's [Midje](https://github.com/marick/Midje)).  Then to keep things small and manageable, we compose our applications of micro-services, right?  So everything's awesome.  The problem is that we don't have an automated way of checking that all these services behave correctly together, so we don't test it properly.  Or worse, we test it by hand!
 
