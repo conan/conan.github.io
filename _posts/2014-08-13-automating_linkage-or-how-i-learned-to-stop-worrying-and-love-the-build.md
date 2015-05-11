@@ -25,8 +25,7 @@ I took a look around and couldn't find an existing tool to do it, so I put it to
 Bower knows about transitive dependencies, but doesn't expose that information in a way that can be easily consumed in 
 Javascript.  Instead, we need to calculate the dependency tree ourselves by walking the `bower.json` files of each 
 dependency in order.  This job is done for us by [wiredep](https://github.com/taptapship/wiredep).  Its gulp plugin 
-isn't very configurable, but that's ok, because we [don't need gulp plugins]
-(http://blog.overzealous.com/post/74121048393/why-you-shouldnt-create-a-gulp-plugin-or-how-to-stop).  Wiredep itself 
+isn't very configurable, but that's ok, because we [don't need gulp plugins](http://blog.overzealous.com/post/74121048393/why-you-shouldnt-create-a-gulp-plugin-or-how-to-stop).  Wiredep itself 
 can produce a list of our dependencies and wire it into our `index.html`.  Wiredep won't do the same for our own code 
 though, for that we'll use [gulp-inject](https://www.npmjs.org/package/gulp-inject).
 
