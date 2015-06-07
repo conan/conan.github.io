@@ -106,3 +106,10 @@ Liberator docs too.
 
 
 # 5. Tracing
+
+The Liberator docs on [debugging](https://clojure-liberator.github.io/liberator/doc/debugging.html) explain how to use
+`wrap-trace`, and how to use the `log!` function to add your own debugging output in as well.  One thing that's 
+particularly nice is that if you use the `:header` and `:ui` options, you'll get a Link header that contains a relative 
+URL.  That URL points to Liberator's web interface, and it'll display the
+[Decision Graph](https://clojure-liberator.github.io/liberator/tutorial/decision-graph.html) with the execution flow of
+the last request highlighted, which is really handy for debugging badly behaving resources.
