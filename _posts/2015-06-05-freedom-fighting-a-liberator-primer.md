@@ -13,8 +13,9 @@ used Liberator a bit, but if not don't worry - the [docs](https://clojure-libera
 and you should familiarise yourself with the
 [Decision Graph](https://clojure-liberator.github.io/liberator/tutorial/decision-graph.html) before reading further.
 
-It can take a  bit of experience (read: anger and frustration) to get the most out of Liberator;
-luckily I've done the necessary and have some handy tips to save you time.  Free your mind and the REST will follow.
+Liberator is a time-saver for sure, but it can take a  bit of experience (read: anger and frustration) to get the most 
+out of it; luckily I've done the necessary and have some handy tips to save you time.  Free your mind and the REST will 
+follow.
 
 
 # 1. Handling Exceptions
