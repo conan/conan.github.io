@@ -19,9 +19,7 @@ follow.
 
 # 1. Handling Exceptions
 
-Liberator will catch any exceptions that are thrown by your handlers, and silently swallow 'em whole whilst returning
-a 500. Quite often you want to see what went wrong - you can plumb in a `handle-exception` handler that can do something
-useful instead.  Here's one that logs:
+Liberator will catch any exceptions that are thrown by your handlers, and swallow 'em whole whilst returning a 500. Quite often you want to see what went wrong, though.  You can get the exception from the context and plumb in a `handle-exception` handler that can do something useful instead.  Here's one that logs:
 
 {% highlight clojure %}
 (defn handle-exception
@@ -79,9 +77,7 @@ Of course, if the request is malformed then you might not be able to identify a 
 # 4. Falling back to Ring
  
 Liberator will coerce data structures you return from handlers into Ring responses (using its `as-response` function), 
-but sometimes you need to manipulate the response a bit before pushing it out, for example to add custom headers.  As of 
-Liberator 0.13, you can give the `ring-response` function an extra map of stuff that'll get merged in before the 
-coercion happens:
+but sometimes you need to manipulate the response a bit before pushing it out, for example to add custom headers.  The `ring-response` function lets you build a response manually, but Liberator 0.13 introduced a feature to override parts of a generated response whilst still using Liberator's coercion:
 
 {% highlight clojure %}
 (defresource users
@@ -97,8 +93,8 @@ coercion happens:
 {% endhighlight %}
 
 In this example, we're handling a POST request to create a new user.  The usual response status would be 201 (Created), 
-because that's what gets added to a response by `:handle-created`, but we override that if the user already existed and 
-the `:post!` function has put a `:conflict` key on the context. In this way we can return a 409 (Conflict), which 
+because that's what gets added to a response by `:handle-created`, but we override that if the user already existed. The 
+`:post!` function puts a `:conflict` key on the context. We can check for this and return a 409 (Conflict), which 
 Liberator [doesn't currently support for POST](https://github.com/clojure-liberator/liberator/issues/107), along with some details of the error.
 
 There's a good example of adding a custom header in the 
