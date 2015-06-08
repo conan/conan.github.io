@@ -14,7 +14,7 @@ and you should familiarise yourself with the
 [Decision Graph](https://clojure-liberator.github.io/liberator/tutorial/decision-graph.html) before reading further.
 
 It can take a  bit of experience (read: anger and frustration) to get the most out of Liberator;
-luckily I've done the necessary and can save you some time.  Free your mind and the REST will follow.
+luckily I've done the necessary and have some handy tips to save you time.  Free your mind and the REST will follow.
 
 
 # 1. Handling Exceptions
@@ -56,6 +56,7 @@ place for that exception handler too:
   :handle-ok ...)
 {% endhighlight %}
 
+
 # 3. Returning representations before Content-Type negotiation
 
 Before a request has made it to the `:media-type-available` decision function, Liberator doesn't know what media type
@@ -75,7 +76,8 @@ use for the representation:
 Of course, if the request is malformed then you might not be able to identify a good media type to send, but I often 
 find I just want to use JSON as the default anyway.
 
-# 2. Falling back to Ring
+
+# 4. Falling back to Ring
  
 Liberator will coerce data structures you return from handlers into Ring responses (using its `as-response` function), 
 but sometimes you need to manipulate the response a bit before pushing it out, for example to add custom headers.  As of 
