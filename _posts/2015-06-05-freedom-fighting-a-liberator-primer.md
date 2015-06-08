@@ -6,11 +6,10 @@ categories: clojure liberator rest
 comments: true
 ---
 
-If you've ever built a webservice in Clojure, you've done it using [Ring](https://github.com/ring-clojure).  Writing 
-HTTP responses is boring, but fortunately [Liberator](https://clojure-liberator.github.io/liberator/github.html) 
+If you've ever built a webservice in Clojure, you've done it using [Ring](https://github.com/ring-clojure/ring).  
+Writing HTTP responses is boring, but fortunately [Liberator](https://clojure-liberator.github.io/liberator/) 
 provides a bunch of boilerplate that makes it easy to do and easy to read and test. This post generally assumes you've 
-used Liberator a bit, but if not don't worry - the [docs](https://clojure-liberator.github.io/liberator/) are excellent, 
-and you should familiarise yourself with the
+used Liberator a bit, but if not don't worry - the [docs](https://clojure-liberator.github.io/liberator/tutorial/) are excellent, but you should familiarise yourself with the
 [Decision Graph](https://clojure-liberator.github.io/liberator/tutorial/decision-graph.html) before reading further.
 
 Liberator is a time-saver for sure, but it can take a  bit of experience (read: anger and frustration) to get the most 
@@ -74,8 +73,7 @@ use for the representation:
                            :representation {:media-type "application/json"}}))
 {% endhighlight %}
 
-Of course, if the request is malformed then you might not be able to identify a good media type to send, but I often 
-find I just want to use JSON as the default anyway.
+Of course, if the request is malformed then you might not be able to identify a good media type to send. You could manually interrogate the request, but I often find I just want to use JSON as the default anyway.
 
 
 # 4. Falling back to Ring
@@ -101,7 +99,7 @@ coercion happens:
 In this example, we're handling a POST request to create a new user.  The usual response status would be 201 (Created), 
 because that's what gets added to a response by `:handle-created`, but we override that if the user already existed and 
 the `:post!` function has put a `:conflict` key on the context. In this way we can return a 409 (Conflict), which 
-Liberator [doesn't currently support for POST](https://github.com/clojure-liberator/liberator/issues/107).
+Liberator [doesn't currently support for POST](https://github.com/clojure-liberator/liberator/issues/107), along with some details of the error.
 
 There's a good example of adding a custom header in the 
 [Altering a generated response](https://clojure-liberator.github.io/liberator/doc/representations.html) section of the
