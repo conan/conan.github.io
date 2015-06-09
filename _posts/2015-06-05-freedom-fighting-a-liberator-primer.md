@@ -110,3 +110,22 @@ particularly nice is that if you use the `:header` and `:ui` options, you'll get
 URL.  That URL points to Liberator's web interface, and it'll display the
 [Decision Graph](https://clojure-liberator.github.io/liberator/tutorial/decision-graph.html) with the execution flow of
 the last request highlighted, which is really handy for debugging badly behaving resources.
+
+
+# 6. Dispatching on request method
+
+Sometimes you want to authorise GET and POST methods differently, or you (correctly) allow partial updates for PUT but not for POST.  Liberator has a poorly-publicised helper function called `liberator.core/by-method` for wrapping your decisions and handlers:
+
+{% highlight clojure %}
+(defn is-publisher? [ctx] ...)
+(defn create-tune [ctx] ...)
+(defn get-tunes [ctx] ...)
+
+(defresource tunes
+  :authorized? (by-method {:get  true
+                           :post is-publisher?})
+  :post! create-tune
+  :handle-ok get-tunes)
+{% endhighlight %}
+
+Here we allow everyone to GET a list of tunes, but only publishers can POST new ones.  This is often nicer than using multimethods that pull the method out of the request.
