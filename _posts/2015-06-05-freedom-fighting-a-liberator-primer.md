@@ -94,10 +94,6 @@ The Liberator docs on [debugging](https://clojure-liberator.github.io/liberator/
 Sometimes you want to authorise GET and POST methods differently, or you (correctly) allow partial updates for PUT but not for POST.  Liberator has a poorly-publicised helper function called `liberator.core/by-method` for wrapping your decisions and handlers:
 
 {% highlight clojure %}
-(defn is-publisher? [ctx] ...)
-(defn create-tune [ctx] ...)
-(defn get-tunes [ctx] ...)
-
 (defresource tunes
   :authorized? (by-method {:get  true
                            :post is-publisher?})
