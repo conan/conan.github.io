@@ -32,6 +32,12 @@ GitHub explain [how to create ssh keys in Git Bash](https://help.github.com/arti
 
 It's annoying to type your ssh key passphrase every time you do a git operation that contacts a remote repository, but it's even more annoying to configure Windows to remember the passphrase; luckily GitHub have done it for us.  Go to your Windows home directory (also your Git Bash home directory) and create a file called `.bash_profile` - you might have to use a terminal because Windows doesn't like letting you create files whose names start with a full stop.  Copy the [script to auto-launch the ssh agent](https://help.github.com/articles/working-with-ssh-key-passphrases/) and paste it into your `.bash_profile`.  When Git Bash next starts it'll ask for your ssh key passphrases, and remember it for future use.
 
+### Ignore filemode
+
+Windows doesn't understand file mode permissions in the same way as Linux or OSX.  Tell git to ignore them by running:
+
+     git config --global core.filemode false
+
 ### Aliases
 
 You've probably got your own favourite aliases for git commands.  Git supports aliases in your `.gitconfig` file, but this isn't as good as regular bash aliases, as you still have to type `git` at the start of each command.  Here are all my aliases, stick 'em in your `.bash_profile`:
