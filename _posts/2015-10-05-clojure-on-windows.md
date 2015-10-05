@@ -228,3 +228,8 @@ end
 We're telling Vagrant to use VirtualBox, and to give the VM a jiggybyte of RAM.  We're saying to use the "ubuntu/trusty64" image, and because we haven't specified a `box_url` parameter, Vagrant will look in the HashiCorp default repo at [atlas.hashicorp.com](https://atlas.hashicorp.com/boxes/search).  We've forwarded port 80 from the VM to 8080 on our host machine, so we can access it at `localhost:8080`. We're giving the VM a local IP address in case we want to access any ports in an ad-hoc fashion that we haven't explicitly forwarded.  The `dev` folder on our host machine's C: drive is being shared with the VM so we can put our code in there and access it from the Ubuntu environment.  Finally we're using ssh agent forwarding so we can ssh around if we need to.
 
 Of course your needs may be different, but it's useful to have a starting point.  I should really go on to configure the VM using chef-solo, but I haven't got round to writing it yet.  Maybe one day I will, and I'll link to it here.
+
+
+# Figwheel
+
+One caveat: if you're writing ClojureScript and using Figwheel, you might find that older versions of ClojureScript didn't play nicely with Figwheel on Windows.  I recommend using version [1.7.122](https://github.com/clojure/clojurescript/releases/tag/r1.7.122).  It's currently pre-release, but it seems solid to me and will surely become a full release soon; you're probably used to using early code if you're working in ClojureScript anyway, and will know that the standards are very high.
