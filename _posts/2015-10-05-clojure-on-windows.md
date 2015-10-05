@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Clojure On Windows"
-date:   2015-10-05 13:30:00
+title: "Clojure On Windows"
+date: 2015-10-05 13:30:00
 categories: clojure windows
 comments: true
 ---
@@ -40,7 +40,7 @@ Windows doesn't understand file mode permissions in the same way as Linux or OSX
 
 ### Aliases
 
-You've probably got your own favourite aliases for git commands.  Git supports aliases in your `.gitconfig` file, but this isn't as good as regular bash aliases, as you still have to type `git` at the start of each command.  Here are all my aliases, stick 'em in your `.bash_profile`:
+You've probably got your own favourite aliases for git commands.  Git supports aliases in your `.gitconfig` file, but this isn't as good as regular bash aliases, as you still have to type `git` at the start of each command.  Here are my aliases, if you like 'em stick 'em in your `.bash_profile`:
  
     alias ll='ls -la'
     alias gs='git status'
@@ -93,7 +93,7 @@ Note that this actually clears the buffer, rather than just scrolling to the end
     export HISTIGNORE=echo*
 
 
-# Install JDK 8
+# JDK 8
 
 Oracle seem to change their URL structure every week, so the [Oracle JDK 8 Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) link will probably be dead by the time you read this. Anyway, download it and install to the default location - you know the drill.  Update your `.bash_profile` with a `JAVA_HOME` environment variable like this:
 
@@ -101,7 +101,8 @@ Oracle seem to change their URL structure every week, so the [Oracle JDK 8 Downl
 
 Add the same env variable to your Windows env variables using RapidEE, or by digging into Control Panel > System > Advanced System Settings > Environment Variables, or by some other route if your Control Panel uses the weird new categorised interface.  Also add `%JAVA_HOME%\bin` to your path.
 
-# Install Leiningen
+
+# Leiningen
 
 If you're using Clojure, you'll need [Leiningen](https://github.com/technomancy/leiningen), the excellent build tool used by almost all Clojure projects.  There is a [Windows installer](http://leiningen-win-installer.djpowell.net/), but I prefer to install manually - I think there's less fuss and we need to know what's going on.  Create a new folder in your home directory called `.lein`, and download the [installer batch file](https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein.bat) into it.  This file is both the installer and the command to run - it has a `self-install` task that will download the latest version of leiningen.
 
@@ -116,3 +117,114 @@ Now open a cmd terminal and navigate into the `.lein` folder.  We need to create
     mklink lein lein.bat
     
 The `mklink` command is the Windows equivalent of `ln` on Linux or OSX, and can be used to make [symbolic links](https://msdn.microsoft.com/en-us/library/windows/desktop/aa363878(v=vs.85).aspx), [hard links and junctions](https://msdn.microsoft.com/en-us/library/windows/desktop/aa365006(v=vs.85).aspx), but is not available in a Git Bash environment (although the links it creates work just fine).
+
+
+# IDE
+
+[IntelliJ](https://www.jetbrains.com/idea/download/) offers the most sophisticated development experience on Windows, matched only by Emacs - but if you're using Emacs, are you sure you wouldn't prefer OSX or Linux?  I don't know much about Emacs and Clojure on Windows, but I know you'll want [Cider](https://github.com/clojure-emacs/cider) and some refactorings like [clj-refactor](https://github.com/clojure-emacs/clj-refactor.el).  Special mention also goes to [LightTable](http://lighttable.com/), which is great at Clojure but not so much other things; given that Clojure development requires you to work with Java or JavaScript at some point, it doesn't cut the mustard for me.  For now I'm assuming you're using IntelliJ.
+
+## Cursive
+
+Clojure development in IntelliJ is made possible by the fantastic [Cursive](https://cursiveclojure.com/).  Head over to the [Getting Started](https://cursiveclojure.com/userguide/) guide, which will explain how to download and install the IntelliJ plugin.  
+
+### Structural Editing
+
+If you're writing a LISP, you'll want Structural Editing (or Paredit, in Emacs parlance).  It's well worth reading the Cursive documentation, but pay special attention to the [Structural Editing](https://cursiveclojure.com/userguide/paredit.html) section.  Go to Settings > General > Smart Keys and in the top section set:
+
+* Surround selection on typing quote or brace: `true`
+
+Further down in the Clojure section set:
+
+* Use structural editing: `true`
+* Maintain selection when surrounding with braces: `false`
+
+### Keybindings
+
+You can apply some default keybindings for Cursive's operations by going to Settings > Keymap > Clojure Keybindings.  It doesn't let you edit individual keybindings here (you do that in the usual IntelliJ way), but it can apply a whole set of Clojure-related keybindings for you in one go.  I recommend starting with the Cursive ones; open the Binding Set dropdown, select Cursive and press Apply.  This is also a really handy place to find out what commands are available that relate to Clojure.  You can also find commands in the regular IntelliJ menus at Edit > Structural Editing and Navigate > Structural Navigation.  I can't recommend enough trying out _all_ of the commands available, as you're guaranteed to find some that are essential to your style of working.
+
+### Default settings
+
+Cursive makes some weird choices with default settings, like indenting comments by 60 characters.  Go to Settings > Editor > Code Style > Clojure and select the General tab.  Set these:
+
+* Align let-bindings: `true`
+* Align reader-conditional values: `true`
+* Align map values: `true`
+* Comment alignment column: `0`
+* Default to only indent: `true`
+
+Obviously these are my preferences, but they'll stand you in good stead when working in teams that use a range of different tools.
+
+### Indentation
+
+The "Default to only indent" setting above is a little tricky to understand.  Cursive allows you to specify a number from 0 to 9 that defines how many forms after the first should be aligned with each other.  0 means all of them, "Indent" means none of them.  By clicking on a function or macro name in a form in your editor, you'll get a little yellow lightbulb that lets you adjust the indentation parameter for that symbol.  I recommend starting with Indent as the default (using the setting above) and adjusting individual forms that you want different behaviour from.  It's best explained with examples. 
+
+#### Indentation: 0
+
+When using a threading macro, I want all forms nicely aligned with the first so it's easy to read the flow:
+
+{% highlight clojure %}
+(->> cars-map
+     (group-by :manufacturer)
+     count)
+{% endhighlight %}
+
+#### Indentation: Indent
+
+When using a `let` block, I never want anything aligned with the first argument to `let`, which is a vector of binding forms:
+
+{% highlight clojure %}
+(let [x-coord 1
+      y-coord 2]
+  (println "x: " x-coord ", y: " y-coord)    
+  [x y])
+{% endhighlight %}
+
+Here the `println` and the vector that we're returning from the block are nicely aligned with Clojure's idiomatic 2-space indent.  There's no need to push them across the page to align with the binding form that defines `x-coord` and `y-coord`.
+
+#### Indentation: n
+
+I must confess, I very rarely use anything but 0 or Indent.  `catch` is a good example of where we don't want to align most of the form, because the first two arguments are special and the rest are just things to do when an exception is caught, so we align with indentation 2:
+
+{% highlight clojure %}
+(try
+  (Long/valueOf my-string)
+  (catch NumberFormatException 
+         nfe
+    (print "Caught exception: " nfe)))
+{% endhighlight %}
+
+We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
+
+
+# Linux VM
+
+I like to have a Linux environment on hand when using Windows, in case I have to run some ruby or some other tool that isn't Windows-friendly.  My need for this has diminished over time, but I still use it, so here's how.
+  
+# Oracle VirtualBox
+
+Install the latest [VirtualBox](https://www.virtualbox.org/wiki/Downloads) for Windows.
+
+# Vagrant 
+
+Install the latest [Vagrant](https://www.vagrantup.com/downloads.html) for Windows.
+
+## Vagrantfile
+
+Vagrant is a management tool for quickly configuring and spinning up virtual machines.  It's made by a company called [HashiCorp](https://hashicorp.com/) who maintain a repository of handy VM images, called Vagrant Boxes.  You can get your vagrant boxen from anywhere, but the default HashiCorp repos are easiest and fine for now.  I'm gonna use Ubuntu Trusty Tahr because it's what I know.  Go to your home directory, create a file called `Vagrantfile`, and paste this in:
+
+{% highlight ruby %}
+Vagrant.configure("2") do |config|
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024
+  end
+  config.vm.box = "ubuntu/trusty64"
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network :private_network, ip: "192.168.33.10"
+  config.vm.synced_folder "C:\\dev", "/home/vagrant/dev"
+  config.ssh.forward_agent = true
+end
+{% endhighlight %}
+
+We're telling Vagrant to use VirtualBox, and to give the VM a jiggybyte of RAM.  We're saying to use the "ubuntu/trusty64" image, and because we haven't specified a `box_url` parameter, Vagrant will look in the HashiCorp default repo at [atlas.hashicorp.com](https://atlas.hashicorp.com/boxes/search).  We've forwarded port 80 from the VM to 8080 on our host machine, so we can access it at `localhost:8080`. We're giving the VM a local IP address in case we want to access any ports in an ad-hoc fashion that we haven't explicitly forwarded.  The `dev` folder on our host machine's C: drive is being shared with the VM so we can put our code in there and access it from the Ubuntu environment.  Finally we're using ssh agent forwarding so we can ssh around if we need to.
+
+Of course your needs may be different, but it's useful to have a starting point.  I should really go on to configure the VM using chef-solo, but I haven't got round to writing it yet.  Maybe one day I will, and I'll link to it here.
