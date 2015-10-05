@@ -2,7 +2,7 @@
 layout: post
 title: "Clojure On Windows"
 date: 2015-10-05 13:30:00
-categories: clojure windows
+categories: clojure clojurescript windows
 comments: true
 ---
 
