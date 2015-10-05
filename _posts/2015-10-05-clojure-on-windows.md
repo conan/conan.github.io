@@ -47,3 +47,20 @@ iTerm got me used to splitting terminal windows horizontally and vertically, fil
 #### Clear buffer shortcut
 
 I like how iTerm allows the current buffer to be cleared with `Alt+K`.  I can't reproduce this behaviour exactly here (something to do with [not clearing buffers of running programs](http://superuser.com/questions/898426/clear-console-buffer-in-conemu-with-cygwin)), but it is possible to clear the buffer with `Alt+K` when no other command is running, by going to Settings > Keys & Macro, and adding a shortcut in one of the Macro slots.  Set the Hotkey to be `Alt+K` and the Description to be `print("\e echo -e '\0033\0143' \n")`.  Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.
+
+## Git Bash
+
+I used to use Cygwin, but let's face it, nobody likes it.  [Git for Windows](https://git-for-windows.github.io/) is a much cleaner experience, and is sufficient for my needs.  If I ever do something more serious, I'll use a Vagrant VM for it.  During the installation you'll get a choice to run git only from inside your Git Bash terminal, to add the git commands to Windows cmd as well, or to inject all the Bash stuff into your cmd.  I recommend the second option, as it lets you use git everywhere, but won't break anything.
+
+### Add Git Bash to ConEmu
+
+Fire up ConEmu, go to Settings > Startup > Tasks and press the + button at the bottom of the list.  This creates a new task.  Give it a name like "Git Bash", and set the startup command to be `C:\Program Files\Git\bin\bash.exe` (or the equivalent if you installed somewhere else).  Using a name like "Shells:git" will cause your new task to be grouped with others in the menu, in this case the task is called "git" and will appear in the "Shells" folder.  I don't bother with this, but if you have loads of terminals then it might be useful.  Check the "Default task for new console" checkbox if you want Git Bash to be your default ConEmu terminal, but I recommend trying it out once before you do that - if the default terminal is broken then it's annoying to fix ConEmu, so check it works before setting it as default.
+
+### Create ssh keys
+
+GitHub explain [how to create ssh keys in Git Bash](https://help.github.com/articles/generating-ssh-keys/) better than I can.  Follow steps 1 and 2 of their guide - we'll sort out the ssh agent in a better way next.
+
+### Remember git ssh key passphrase with ssh-agent
+
+It's annoying to type your ssh key passphrase every time you do a git operation that contacts a remote repository, but it's even more annoying to configure Windows to remember the passphrase; luckily GitHub have done it for us.  Go to your Windows home directory (also your Git Bash home directory) and create a file called `.bash_profile` - you might have to use a terminal because Windows doesn't like letting you create files whose names start with a full stop.  Copy the [script to auto-launch the ssh agent](https://help.github.com/articles/working-with-ssh-key-passphrases/) and paste it into your `.bash_profile`.  When Git Bash next starts it'll ask for your ssh key passphrases, and remember it for future use.
+
