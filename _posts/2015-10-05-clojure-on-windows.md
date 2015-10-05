@@ -22,7 +22,7 @@ I prefer a *nix-like terminal experience, but I recommend a similar setup if you
 
 I used to use Cygwin, but let's face it, nobody likes it.  [Git for Windows](https://git-for-windows.github.io/) is a much cleaner experience, and is sufficient for my needs.  If you want to use Windows cmd as your terminal instead of Git Bash, you should still install Git for Windows.  During the installation you'll get a choice to run git only from inside your Git Bash terminal, to add the git commands to Windows cmd as well, or to inject all the Bash stuff into your cmd.  I recommend the second option, as it lets you use git everywhere, but won't break anything.
 
-_NOTE: Conventional wisdom seems to be to set `core.autocrlf` to `true` on Windows, but I think this is almost always wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings, but many Linux and OSX tools can't cope.  I always set my `core.autocrlf` to `input`, to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong._
+_NOTE: Conventional wisdom seems to be to set `core.autocrlf` to `true` on Windows, but I think this is almost always wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings, but many Linux and OSX tools can't cope with CRLF.  I always set my `core.autocrlf` to `input`, to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong._
 
 ### Create ssh keys
 
@@ -194,6 +194,10 @@ I must confess, I very rarely use anything but 0 or Indent.  `catch` is a good e
 {% endhighlight %}
 
 We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
+
+## Line endings and file encodings
+
+Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope.
 
 
 # Linux VM
