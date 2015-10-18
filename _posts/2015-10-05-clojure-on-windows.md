@@ -236,4 +236,4 @@ Of course your needs may be different, but it's useful to have a starting point.
 
 # Figwheel
 
-One caveat: if you're writing ClojureScript and using Figwheel, you might find that older versions of ClojureScript didn't play nicely with Figwheel on Windows.  I recommend using version [1.7.122](https://github.com/clojure/clojurescript/releases/tag/r1.7.122).  It's currently pre-release, but it seems solid to me and will surely become a full release soon; you're probably used to using early code if you're working in ClojureScript anyway, and will know that the standards are very high.
+One caveat: if you're writing ClojureScript and using Figwheel, you might find that older versions of ClojureScript didn't play nicely with Figwheel on Windows.  I recommend using the latest release version [1.7.145](https://github.com/clojure/clojurescript/releases/tag/r1.7.145).
