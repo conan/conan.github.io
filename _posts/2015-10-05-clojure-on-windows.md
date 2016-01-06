@@ -195,6 +195,10 @@ I must confess, I very rarely use anything but 0 or Indent.  `catch` is a good e
 
 We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
 
+### Leiningen checkouts
+
+Leiningen checkouts work just fine on Windows. You can use directory symbolic links (`mklink /D`) or junctions (`mklink /J`) to create them, but Cursive will log errors saying "Directory outside content root ..." for each checkout that's created as a directory symbolic link instead of a junction.  So always use junctions.
+
 ## Line endings and file encodings
 
 Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope.
