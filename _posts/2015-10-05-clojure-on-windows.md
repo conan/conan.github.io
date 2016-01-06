@@ -197,7 +197,7 @@ We don't want the `print` any more than two spaces indented, but it's nice to ha
 
 ### Leiningen checkouts
 
-Leiningen checkouts work just fine on Windows. You can use directory symbolic links (`mklink /D`) or junctions (`mklink /J`) to create them, but Cursive will log errors saying "Directory outside content root ..." for each checkout that's created as a directory symbolic link instead of a junction.  So always use junctions.
+[Leiningen checkouts](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies) work just fine on Windows. You can use directory symbolic links (`mklink /D`) or junctions (`mklink /J`) to create them, but Cursive will log errors saying "Directory outside content root ..." for each checkout that's created as a directory symbolic link instead of a junction.  So always use junctions.
 
 ## Line endings and file encodings
 
