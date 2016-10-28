@@ -8,6 +8,8 @@ url: "http://conan.is" # the base hostname & protocol for your site
 twitter_username: conanistweeting
 github_username: conan
 cv_url: http://conan.is/CV/
+gems:
+  - jekyll-sitemap
 
 # Build settings
 markdown: kramdown
