@@ -6,6 +6,7 @@ categories: clojurescript hammer-js
 comments: true
 custom_js:
 - zoomer
+redirect-from: "/clojurescript/hammer-js/2016/10/28/touching-cljs.html"
 ---
 
 You can [touch it yourself](/zoomer).  
