@@ -44,7 +44,7 @@ You've probably got your own favourite aliases for git commands.  Git supports a
  
     alias ll='ls -la'
     alias gs='git status'
-    alias gl='git log --pretty=format:"%h%x09%an%x09%ad%x09%s"'
+    alias gl='git log --graph --pretty=format:'\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\'\'' --abbrev-commit'
     alias ga='git add .'
     alias grp='git remote prune origin'
 
@@ -54,7 +54,7 @@ iTerm is the feature I've always been most jealous of OSX users for.  Whilst the
 
 ### Buffer size
 
-You want a long buffer.  You can't have a inifinite one like on Linux, but you can make it long in Settings > Main > Size & Pos > Long console output.  Set it to 9999.
+You want a long buffer.  You can't have a infinite one like on Linux, but you can make it long in Settings > Main > Size & Pos > Long console output.  Set it to 9999.
 
 ### One tab per group
 
@@ -73,6 +73,24 @@ Go to Settings > Startup > Tasks and press the + button at the bottom of the lis
 (or the equivalent if you installed somewhere else).  The `--login -i` makes the shell read your `.bash_profile` and starts it as an interactive shell.  
 
 Using a name like "Shells:git" will cause your new task to be grouped with others in the menu, in this case the task is called "git" and will appear in the "Shells" folder.  I don't bother with this, but if you have loads of terminals then it might be useful.  Check the "Default task for new console" checkbox if you want Git Bash to be your default ConEmu terminal, but I recommend trying it out in ConEmu once before you do that - if the default terminal is broken then it's annoying to fix ConEmu, so check it works before setting it as default.
+
+If you want ConEmu to show the current directory in the tab title, you'll need to add this to your `.bash_profile` in Git Bash:
+
+    PROMPT_COMMAND='ConEmuC -StoreCWD'
+
+### Add Bash For Windows as a terminal
+
+There used to be a section here about running a Linux VM in Vagrant and how useful it was.  Now we have the [Windows subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/install_guide), we don't need it any more!  I now happily run Ruby, Python, SASS and other things from Bash. 
+
+Once you have it running, create another ConEmu task, with the following Task parameters:
+
+    -icon "%USERPROFILE%\AppData\Local\lxss\bash.ico"
+    
+Use this as the startup command:
+
+    %windir%\system32\bash.exe -cur_console:p
+
+Getting the current directory in the tab title for Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar).
 
 ### Keyboard shortcuts
 
@@ -97,7 +115,7 @@ Note that this actually clears the buffer, rather than just scrolling to the end
 
 Oracle seem to change their URL structure every week, so the [Oracle JDK 8 Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) link will probably be dead by the time you read this. Anyway, download it and install to the default location - you know the drill.  Update your `.bash_profile` with a `JAVA_HOME` environment variable like this:
 
-    export JAVA_HOME=C:\Program Files\Java\jdk1.8.0_60
+    export JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101
 
 Add the same env variable to your Windows env variables using RapidEE, or by digging into Control Panel > System > Advanced System Settings > Environment Variables, or by some other route if your Control Panel uses the weird new categorised interface.  Also add `%JAVA_HOME%\bin` to your path.
 
@@ -199,45 +217,31 @@ We don't want the `print` any more than two spaces indented, but it's nice to ha
 
 [Leiningen checkouts](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies) work just fine on Windows. You can use directory symbolic links (`mklink /D`) or junctions (`mklink /J`) to create them, but Cursive will log errors saying "Directory outside content root ..." for each checkout that's created as a directory symbolic link instead of a junction.  So always use junctions.
 
-## Line endings and file encodings
+If you want to run Leiningen from both Windows and Bash For Windows, you may find you run into trouble because you can't have both a Windows Junction and a Linux symlink with the same name in the same directory.  To solve this problem, I just check out the dependency directly into the checkouts folder.
 
-Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope.
+### Figwheel
 
-
-# Linux VM
-
-I like to have a Linux environment on hand when using Windows, in case I have to run some ruby or some other tool that isn't Windows-friendly.  My need for this has diminished over time, but I still use it, so here's how.
+If you write ClojureScript, you're probably using [Figwheel](https://github.com/bhauman/lein-figwheel).  It's possible to run  Figwheel in an Intellij REPL, details [here](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
   
-# Oracle VirtualBox
+Here's the short version: you'll need to add a small file, set up a build config to run in a normal JVM and add a parameter.  
 
-Install the latest [VirtualBox](https://www.virtualbox.org/wiki/Downloads) for Windows.
+1. Create a file called `dev/repl.clj`, containing this:
 
-# Vagrant 
-
-Install the latest [Vagrant](https://www.vagrantup.com/downloads.html) for Windows.
-
-## Vagrantfile
-
-Vagrant is a management tool for quickly configuring and spinning up virtual machines.  It's made by a company called [HashiCorp](https://hashicorp.com/) who maintain a repository of handy VM images, called Vagrant Boxes.  You can get your vagrant boxen from anywhere, but the default HashiCorp repos are easiest and fine for now.  I'm gonna use Ubuntu Trusty Tahr because it's what I know.  Go to your home directory, create a file called `Vagrantfile`, and paste this in:
-
-{% highlight ruby %}
-Vagrant.configure("2") do |config|
-  config.vm.provider "virtualbox" do |vb|
-    vb.memory = 1024
-  end
-  config.vm.box = "ubuntu/trusty64"
-  config.vm.network "forwarded_port", guest: 80, host: 8080
-  config.vm.network :private_network, ip: "192.168.33.10"
-  config.vm.synced_folder "C:\\dev", "/home/vagrant/dev"
-  config.ssh.forward_agent = true
-end
+{% highlight clojure %}
+;; This does not require a namespace declaration. See the README or
+;; https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL
+;; for more details.
+(use 'figwheel-sidecar.repl-api)
+(start-figwheel!)
+(cljs-repl)
 {% endhighlight %}
 
-We're telling Vagrant to use VirtualBox, and to give the VM a jiggybyte of RAM.  We're saying to use the "ubuntu/trusty64" image, and because we haven't specified a `box_url` parameter, Vagrant will look in the HashiCorp default repo at [atlas.hashicorp.com](https://atlas.hashicorp.com/boxes/search).  We've forwarded port 80 from the VM to 8080 on our host machine, so we can access it at `localhost:8080`. We're giving the VM a local IP address in case we want to access any ports in an ad-hoc fashion that we haven't explicitly forwarded.  The `dev` folder on our host machine's C: drive is being shared with the VM so we can put our code in there and access it from the Ubuntu environment.  Finally we're using ssh agent forwarding so we can ssh around if we need to.
+2. Go to run configurations and create a new local Clojure REPL, and choose "Use clojure.main in a normal JVM process".
 
-Of course your needs may be different, but it's useful to have a starting point.  I should really go on to configure the VM using chef-solo, but I haven't got round to writing it yet.  Maybe one day I will, and I'll link to it here.
+3. Add `dev/repl.clj` to the Parameters of the run configuration.
 
+Voila!  Now you can run Figwheel within Cursive's REPL environment.
 
-# Figwheel
+## Line endings and file encodings
 
-One caveat: if you're writing ClojureScript and using Figwheel, you might find that older versions of ClojureScript didn't play nicely with Figwheel on Windows.  I recommend using the latest release version [1.7.145](https://github.com/clojure/clojurescript/releases/tag/r1.7.145).
+Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope. 
