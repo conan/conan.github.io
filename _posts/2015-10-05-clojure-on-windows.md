@@ -88,7 +88,7 @@ Once you have it running, create another ConEmu task, with the following Task pa
     
 Use this as the startup command:
 
-    %windir%\system32\bash.exe -cur_console:p
+    %windir%\system32\bash.exe --login -cur_console:p
 
 Getting the current directory in the tab title for Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar).
 
