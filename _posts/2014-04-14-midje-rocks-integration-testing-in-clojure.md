@@ -9,7 +9,7 @@ Clojure's great yeah- we write these tiny functions that do one thing well, and 
 
 Clearly that's no good, we need a way of spinning up our services and testing them properly as part of our CI process, so we don't get called up at night when it all breaks.  Fortunately, Midje has excellent support for this built right in.  Let's start with a simple hello world Ring server, jazzed up a little bit:
 
-{% highlight clojure %}
+```clojure
 
 (ns it.core
   (:require [conf-er :refer [config]]
@@ -32,7 +32,7 @@ Clearly that's no good, we need a way of spinning up our services and testing th
   []
   (.stop @server))
 
-{% endhighlight %}
+```
 
 
 We've gone a little bit further than the standard hello world example, because we're storing the ring server in an atom, so we can refer to it later and stop it.  You may also have noticed that we're using the very handy [conf-er](https://github.com/TouchType/conf-er) library to load the content that our server will be dishing out from the `:body` attribute of a config file called `application.conf`:
