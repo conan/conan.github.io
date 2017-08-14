@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Weighted Searching with Elasticsearch"
+title: "Searching Weighted Tags with Elasticsearch"
 date: 2017-06-29 13:30:00
 categories: elasticsearch
 comments: true
