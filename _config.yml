@@ -2,7 +2,7 @@
 title: Conan Is Blogging
 email: conan@conan.is
 description: > # this means to ignore newlines until "baseurl:"
-  A full-stack dev's experiences in tech
+  Let's have some fn
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://conan.is" # the base hostname & protocol for your site
 twitter_username: conanistweeting
