@@ -183,14 +183,11 @@ Here the `println` and the vector that we're returning from the block are nicely
 
 #### Indentation: n
 
-I must confess, I very rarely use anything but 0 or Indent.  `catch` is a good example of where we don't want to align most of the form, because the first two arguments are special and the rest are just things to do when an exception is caught, so we align with indentation 2:
+I must confess, I very rarely use anything but 0 or Indent.  `update-in` is a good example of where we want to align later:
 
 {% highlight clojure %}
-(try
-  (Long/valueOf my-string)
-  (catch NumberFormatException 
-         nfe
-    (print "Caught exception: " nfe)))
+(update-in db [:user] assoc :email "milicent@example.org"
+                            :fave-colour "green")
 {% endhighlight %}
 
 We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
