@@ -1,4 +1,4 @@
 conan.github.io
 ===============
 
-A full-stack dev's experiences in tech
+[Conan's blog](http://conan.is)
