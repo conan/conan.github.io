@@ -27,6 +27,7 @@ body {
     background: -ms-linear-gradient(270deg, rgba(0,255,255,1) 0%, rgba(255,0,255,1) 100%); /* ie10+ */
     background: linear-gradient(180deg, rgba(0,255,255,1) 0%, rgba(255,0,255,1) 100%); /* w3c */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffff', endColorstr='#ff00ff',GradientType=0 ); /* ie6-9 */
+    background-attachment: fixed;
 }
 
 
