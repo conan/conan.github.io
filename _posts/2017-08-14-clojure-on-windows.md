@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Clojure On Windows"
-date: 2015-10-05 13:30:00
+date: 2017-08-14 13:30:00
 categories: clojure clojurescript windows
 comments: true
 ---
@@ -16,13 +16,15 @@ The first thing I do when setting up a Windows dev environment is to install [Ra
 
 # Terminal setup
 
-I prefer a *nix-like terminal experience, but I recommend a similar setup if you want to use Windows cmd.
+The best solution is to install the [Windows Subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/install_guide).
 
-## Git Bash
+## Git 
 
-I used to use Cygwin, but let's face it, nobody likes it.  [Git for Windows](https://git-for-windows.github.io/) is a much cleaner experience, and is sufficient for my needs.  If you want to use Windows cmd as your terminal instead of Git Bash, you should still install Git for Windows.  During the installation you'll get a choice to run git only from inside your Git Bash terminal, to add the git commands to Windows cmd as well, or to inject all the Bash stuff into your cmd.  I recommend the second option, as it lets you use git everywhere, but won't break anything.
+Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings, but many Linux and OSX tools can't cope with CRLF.  I always set
 
-_NOTE: Conventional wisdom seems to be to set `core.autocrlf` to `true` on Windows, but I think this is almost always wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings, but many Linux and OSX tools can't cope with CRLF.  I always set my `core.autocrlf` to `input`, to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong._
+    git config core.autocrlf input
+    
+to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong.
 
 ### Create ssh keys
 
@@ -30,27 +32,34 @@ GitHub explain [how to create ssh keys in Git Bash](https://help.github.com/arti
 
 ### Remember git ssh key passphrase with ssh-agent
 
-It's annoying to type your ssh key passphrase every time you do a git operation that contacts a remote repository, but it's even more annoying to configure Windows to remember the passphrase; luckily GitHub have done it for us.  Go to your Windows home directory (also your Git Bash home directory) and create a file called `.bash_profile` - you might have to use a terminal because Windows doesn't like letting you create files whose names start with a full stop.  Copy the [script to auto-launch the ssh agent](https://help.github.com/articles/working-with-ssh-key-passphrases/) and paste it into your `.bash_profile`.  When Git Bash next starts it'll ask for your ssh key passphrases, and remember it for future use.
-
-### Ignore filemode
-
-Windows doesn't understand file mode permissions in the same way as Linux or OSX.  Tell git to ignore them by running:
-
-     git config --global core.filemode false
+Add `eval $(ssh-agent)` to your `.bash_profile`.
 
 ### Aliases
 
-You've probably got your own favourite aliases for git commands.  Git supports aliases in your `.gitconfig` file, but this isn't as good as regular bash aliases, as you still have to type `git` at the start of each command.  Here are my aliases, if you like 'em stick 'em in your `.bash_profile`:
+You've probably got your own favourite aliases for git commands.  Git supports aliases in your `.gitconfig` file, which you can set like this:
+
+    git config --global alias.co checkout
+    git config --global alias.br branch
+    git config --global alias.ci commit
+    git config --global alias.st status
+
+This isn't as good as regular bash aliases, as you still have to type `git` at the start of each command.  Here are my aliases, if you like 'em stick 'em in your `.bash_profile`:
  
     alias ll='ls -la'
     alias gs='git status'
     alias gl='git log --graph --pretty=format:'\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\'\'' --abbrev-commit'
     alias ga='git add .'
     alias grp='git remote prune origin'
+    
+## Colours
+
+I can't be bothered to learn how ANSI escape sequences and XTERM colours and stuff, just paste this in your `.bash_profile`:
+
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[38;5;197m\]$(__git_ps1 "(%s)")\[\033[00m\]$ '
 
 ## ConEmu
 
-iTerm is the feature I've always been most jealous of OSX users for.  Whilst the Windows 10 console is hugely improved (it now resizes and copy/pastes properly), for me there's no alternative to [ConEmu](https://conemu.github.io/).  It provides a tabbed, split environment that can host any other consoles. It's worth having a look through all the settings as it's extremely customisable, but here are a few key ones mainly useful for reproducing iTerm's behaviour. 
+Install [ConEmu](https://conemu.github.io/).  It provides a tabbed, split environment that can host any other consoles. It's worth having a look through all the settings as it's extremely customisable, but here are a few key ones. 
 
 ### Buffer size
 
@@ -64,33 +73,20 @@ When displaying multiple consoles in a window, I want them all also to be within
 
 There are a number of settings related to copy/pasting behaviour, but there's one in particular that I find annoying.  ConEmu will pop up a warning menu if you paste more than 200 characters or an enter keypress by default, but you can turn these off in the Settings > Keys & Macro > Paste section under "Confirm <Enter> keypress" and "Confirm pasting more than X chars". 
 
-### Add Git Bash as default terminal
+### Set Bash for Windows as default terminal
 
-Go to Settings > Startup > Tasks and press the + button at the bottom of the list.  This creates a new task.  Give it a name like "Git Bash", and set the startup command to be:
- 
-    "C:\Program Files\Git\bin\bash.exe" --login -i 
- 
-(or the equivalent if you installed somewhere else).  The `--login -i` makes the shell read your `.bash_profile` and starts it as an interactive shell.  
 
-Using a name like "Shells:git" will cause your new task to be grouped with others in the menu, in this case the task is called "git" and will appear in the "Shells" folder.  I don't bother with this, but if you have loads of terminals then it might be useful.  Check the "Default task for new console" checkbox if you want Git Bash to be your default ConEmu terminal, but I recommend trying it out in ConEmu once before you do that - if the default terminal is broken then it's annoying to fix ConEmu, so check it works before setting it as default.
-
-If you want ConEmu to show the current directory in the tab title, you'll need to add this to your `.bash_profile` in Git Bash:
-
-    PROMPT_COMMAND='ConEmuC -StoreCWD'
-
-### Add Bash For Windows as a terminal
-
-There used to be a section here about running a Linux VM in Vagrant and how useful it was.  Now we have the [Windows subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/install_guide), we don't need it any more!  I now happily run Ruby, Python, SASS and other things from Bash. 
-
-Once you have it running, create another ConEmu task, with the following Task parameters:
+Go to Settings > Startup > Tasks and edit `{Bash::bash}` if it already exists, or press the + button at the bottom of the list if it doesnt. Set the task up to have the name `Bash::bash`, check all the boxes, set the task parameters to be:
 
     -icon "%USERPROFILE%\AppData\Local\lxss\bash.ico"
     
-Use this as the startup command:
+Set the console command in the big box at the bottom to be:
+    
+    %windir%\system32\bash.exe -cur_console:pm:/mnt --login -i -new_console
+    
+Don't forget to press the "Save settings" button at the bottom.
 
-    %windir%\system32\bash.exe --login -cur_console:p
-
-Getting the current directory in the tab title for Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar).
+_NOTE: Getting the current directory in the tab title for Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar)._
 
 ### Keyboard shortcuts
 
@@ -113,29 +109,18 @@ Note that this actually clears the buffer, rather than just scrolling to the end
 
 # JDK 8
 
-Oracle seem to change their URL structure every week, so the [Oracle JDK 8 Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) link will probably be dead by the time you read this. Anyway, download it and install to the default location - you know the drill.  Update your `.bash_profile` with a `JAVA_HOME` environment variable like this:
+You can't just install Oracle Java, instead you have to do this:
 
-    export JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101
-
-Add the same env variable to your Windows env variables using RapidEE, or by digging into Control Panel > System > Advanced System Settings > Environment Variables, or by some other route if your Control Panel uses the weird new categorised interface.  Also add `%JAVA_HOME%\bin` to your path.
-
+    sudo add-apt-repository ppa:webupd8team/java
+    sudo apt update
+    sudo apt install oracle-java8-installer
+    sudo apt install oracle-java8-set-default
+    
+Change the 8s for 9s if you want Java 9 (may or may not apply to the repo name).
 
 # Leiningen
 
-If you're using Clojure, you'll need [Leiningen](https://github.com/technomancy/leiningen), the excellent build tool used by almost all Clojure projects.  There is a [Windows installer](http://leiningen-win-installer.djpowell.net/), but I prefer to install manually - I think there's less fuss and we need to know what's going on.  Create a new folder in your home directory called `.lein`, and download the [installer batch file](https://raw.githubusercontent.com/technomancy/leiningen/stable/bin/lein.bat) into it.  This file is both the installer and the command to run - it has a `self-install` task that will download the latest version of leiningen.
-
-Open a Git Bash terminal and run:
-
-    cd ~/.lein
-    ./lein.bat self-install
-    
-Now open a cmd terminal and navigate into the `.lein` folder.  We need to create a symbolic link to the `lein.bat` file so we can use it properly in Git Bash.  Run this:
-
-    cd %userprofile%\.lein
-    mklink lein lein.bat
-    
-The `mklink` command is the Windows equivalent of `ln` on Linux or OSX, and can be used to make [symbolic links](https://msdn.microsoft.com/en-us/library/windows/desktop/aa363878(v=vs.85).aspx), [hard links and junctions](https://msdn.microsoft.com/en-us/library/windows/desktop/aa365006(v=vs.85).aspx), but is not available in a Git Bash environment (although the links it creates work just fine).
-
+Follow the [official instructions](https://leiningen.org/#install).
 
 # IDE
 
@@ -164,13 +149,10 @@ You can apply some default keybindings for Cursive's operations by going to Sett
 
 Cursive makes some weird choices with default settings, like indenting comments by 60 characters.  Go to Settings > Editor > Code Style > Clojure and select the General tab.  Set these:
 
-* Align let-bindings: `true`
-* Align reader-conditional values: `true`
-* Align map values: `true`
 * Comment alignment column: `0`
 * Default to only indent: `true`
 
-Obviously these are my preferences, but they'll stand you in good stead when working in teams that use a range of different tools.
+The first will stop your comments being autoformatted away from the end of your lines, and the second relates to:
 
 ### Indentation
 
@@ -212,12 +194,6 @@ I must confess, I very rarely use anything but 0 or Indent.  `catch` is a good e
 {% endhighlight %}
 
 We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
-
-### Leiningen checkouts
-
-[Leiningen checkouts](https://github.com/technomancy/leiningen/blob/master/doc/TUTORIAL.md#checkout-dependencies) work just fine on Windows. You can use directory symbolic links (`mklink /D`) or junctions (`mklink /J`) to create them, but Cursive will log errors saying "Directory outside content root ..." for each checkout that's created as a directory symbolic link instead of a junction.  So always use junctions.
-
-If you want to run Leiningen from both Windows and Bash For Windows, you may find you run into trouble because you can't have both a Windows Junction and a Linux symlink with the same name in the same directory.  To solve this problem, I just check out the dependency directly into the checkouts folder.
 
 ### Figwheel
 
