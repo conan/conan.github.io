@@ -10,23 +10,19 @@ comments: true
 
 Most Clojure developers seem to use Linux or OSX, and the community is heavily predisposed towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason.  Clojure development on Windows is surprisingly smooth, but here's a guide to get you started anyway (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
 
-
-# RapidEE
-
-The first thing I do when setting up a Windows dev environment is to install [RapidEE](http://www.rapidee.com/en/about).  It gives you a graphical interface to your Windows environment variables which isn't crap like the built-in one, and it's free.  If you like it, please consider [donating](http://www.rapidee.com/en/donation) (I have no affiliation with the project, I just think it's great).
-
-
 # Terminal setup
 
 The best solution is to install the [Windows Subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/install_guide).
 
 ## Git 
 
-Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings, but many Linux and OSX tools can't cope with CRLF.  I always set
+Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings (except notepad), but many Linux and OSX tools can't cope with CRLF.  I always set
 
     git config core.autocrlf input
     
-to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong.
+to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong.  Do this in both Bash for Windows and in cmd.
+
+_WARNING:_ If you use SourceTree, it will break your line endings if you discard changes.  Just for kicks.
 
 ### Create ssh keys
 
@@ -108,6 +104,30 @@ Note that this actually clears the buffer, rather than just scrolling to the end
   
     export HISTIGNORE=echo*
 
+## GPG
+
+Leiningen uses GPG for repo authentication, and it works fine in bash on Windows (you can just generate a key and use it to encrypt credentials following the [leiningen deploy instructions](https://github.com/technomancy/leiningen/blob/master/doc/DEPLOY.md#authentication), but that's no good if you're using Intellij or other Windows-based tools.  Install [GPG4Win](https://www.gpg4win.org/) and select GPA.  This gives you the `gpg` command in a regular cmd shell.  Fire up such a shell and do this:
+
+     gpg --gen-key
+     gpg --list-keys
+     
+That'll walk you through creating a key, and show it once you're done.  You'll need to put your leiningen credentials in a file called `%userprofile%/.lein/credentials.clj`, and it should look something like this:
+
+    {#"my\.datomic\.com" {:username "conan@your-email-address.com" :password "your-password"}}
+
+Put in here your plaintext username/password for each authenticated leiningen repo you use.  Then encrypt it with GPG, but GPG is so crap that there's a trick to it:
+
+    gpg --default-recipient-self -e %userprofile%/.lein/credentials.clj > %userprofile%/.lein/credentials.clj.gpg
+    File `credentials.clj.gpg' exists. Overwrite? (y/N)
+    
+When it asks you this, say no (n).  If you say yes it'll break.  If you say no, it'll ask you for a new filename:
+
+        Enter new filename: credentials.clj.gpg.2
+        
+It's still gone and written a 0-bytes file called `credentials.clj.gpg`, which we have to delete, but it's also correctly written our `credentials.clj.gpg.2`, which we must now rename:
+        
+        del credentials.clj.gpg
+        rename credentials.clj.gpg.2 credentials.clj.gpg
 
 # JDK 8
 
