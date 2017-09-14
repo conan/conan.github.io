@@ -6,7 +6,7 @@ categories: clojure clojurescript windows
 comments: true
 ---
 
-## Updated: 14/08/2017
+### Updated: 14/09/2017
 
 Most Clojure developers seem to use Linux or OSX, and the community is heavily predisposed towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason.  Clojure development on Windows is surprisingly smooth, but here's a guide to get you started anyway (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
 
