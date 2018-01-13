@@ -1,4 +1,19 @@
 /**
+ * Stupid
+ */
+@keyframes disco {
+    from {color: #00FFFF;}
+    to {color: #FF00FF;}
+}
+
+.disco {
+    animation-name: disco;
+    animation-duration: 0.3s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate-reverse;
+}
+
+/**
  * Site header
  */
 .site-header {
