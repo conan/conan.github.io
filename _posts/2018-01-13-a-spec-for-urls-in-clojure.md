@@ -44,33 +44,29 @@ Your average URL won't contain them all, but we want our tests to be as comprehe
 
 ## Component generators
 
-Let's write our own generator for URLs, and use it in an improved URL spec. To construct URLs we can use Chas Emerick's handy [url](https://github.com/cemerick/url) library:
+Let's write our own generator for URLs, and use it in an improved URL spec. A generator is a no-arg function that returns a [`clojure.test.check.generators.Generator`](https://clojure.github.io/test.check/clojure.test.check.generators.html#var--.3EGenerator).
+
+To construct URLs we can use Chas Emerick's handy [url](https://github.com/cemerick/url) library:
 
 ``` clojure
 (require '[cemerick.url :as url])
 ```
 
-It features a handy constructor for URLs, `->URL`, which takes a vector of the above components and gives us back a [`java.net.URI`](https://docs.oracle.com/javase/8/docs/api/java/net/URI.html) object (Types? Constructors? Objects? OOPs!). We'll need a generator for each of them, but first let's set ourselves up with a generator that makes non-empty, url-encoded alphanumeric strings - we'll be needing a lot of these later:
+It features a handy constructor for URLs, `->URL`, which takes a vector of the above components and gives us back a [`java.net.URI`](https://docs.oracle.com/javase/8/docs/api/java/net/URI.html) object (Types? Constructors? Objects? OOPs!). We'll need a generator for each of them, but first let's set ourselves up with a generator that makes non-empty alphanumeric strings - we'll be needing a lot of these later:
 
 ``` clojure
-(def url-encoded-string-alphanumeric
-  (sgen/fmap url/url-encode (sgen/string-alphanumeric)))
+(defn non-empty-string-alphanumeric
+  []
+  (sgen/such-that #(not= "" %) 
+    (sgen/string-alphanumeric)))
 
-(def non-empty-url-encoded-string-alphanumeric
-  (sgen/such-that #(not= "" %) url-encoded-string-alphanumeric))
+(sgen/generate (non-empty-string-alphanumeric))
+=> "j1cf5jDg6toLyP"
 ```
 
 The [`fmap`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/fmap) in the first generator here lets us apply a function to the result of a generator, in this case to url-encode the string.
 
 The [`such-that`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/such-that) in the second generator takes a predicate and another generator, and filters that generator's output using the predicate. This does mean that some of the generated values are thrown away, which is wasted work, but we just want to filter out the empty strings, and they're rare compared to all possible outputs of `string-alphanumeric`. 
-
-``` clojure
-(sgen/generate url-encoded-string-alphanumeric)
-=> "MKSOj67H816WLV4E6MW7E"
-
-(sgen/generate non-empty-url-encoded-string-alphanumeric)
-=> "j1cf5jDg6toLyP"
-```
 
 ### Protocol
 
