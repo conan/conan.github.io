@@ -78,7 +78,7 @@ This is easy, we just want to allow `http` and `https` for now, so we can use [`
 
 ### Username, password, host
 
-These are just strings, and surprisingly they can be empty. We can use `url-encoded-string-alphanumeric`.
+These are just strings, and surprisingly they can be empty. We can use `string-alphanumeric`.
 
 
 ### Port
@@ -101,7 +101,7 @@ Now that we have a generator that can create non-empty strings, we can easily cr
                 (apply str))
   (sgen/not-empty
     (sgen/vector
-      (non-empty-url-encoded-string-alphanumeric))))
+      (non-empty-string-alphanumeric))))
 ```
 
 Starting from the bottom, we're using our `non-empty-url-encoded-string-alphanumeric` generator and passing it to [`vector`](https://clojure.github.io/test.check/clojure.test.check.generators.html#var-vector) to get a vector of non-empty strings.  We're ensuring the vector itself is [`not-empty`](https://clojure.github.io/test.check/clojure.test.check.generators.html#var-not-empty).  Finally we're applying a function to the generated vector using [`fmap`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/fmap) which interleaves the strings with forward slashes, and gives us back the whole lot as a single string.
@@ -112,34 +112,36 @@ To generate query params, we need a map of random keys and values, which we can 
 
 ``` clojure
 (sgen/map
-  non-empty-url-encoded-string-alphanumeric
-  non-empty-url-encoded-string-alphanumeric
-  {:max-elements 10}) 
+  non-empty-string-alphanumeric
+  non-empty-string-alphanumeric
+  {:max-elements 3}) 
 ```
 
 ### Anchor
 
-Anchors can be empty, so we use `url-encoded-string-alphanumeric`.
+Anchors can be empty, so we use `string-alphanumeric`.
 
 ## URL generator
 
 Here's how our full URL generator looks:
 
 ``` clojure
-(def url-gen
-  "Generator for generating URLs; note that it may generate http URLs 
-  on port 443 and https URLs on port 80, and only uses alphanumerics"
-  (sgen/fmap 
+(defn url-gen
+  "Generator for generating URLs; note that it may generate 
+  http URLs on port 443 and https URLs on port 80, and only 
+  uses alphanumerics"
+  []
+  (sgen/fmap
     (partial apply (comp str url/->URL))
     (sgen/tuple
       ;; protocol
       (sgen/elements #{"http" "https"})
       ;; username
-      url-encoded-string-alphanumeric
+      (sgen/string-alphanumeric)
       ;; password
-      url-encoded-string-alphanumeric
+      (sgen/string-alphanumeric)
       ;; host
-      url-encoded-string-alphanumeric
+      (sgen/string-alphanumeric)
       ;; port
       (sgen/choose 1 65535)
       ;; path
@@ -148,14 +150,14 @@ Here's how our full URL generator looks:
                        (apply str))
         (sgen/not-empty
           (sgen/vector
-            non-empty-url-encoded-string-alphanumeric)))
+            (non-empty-string-alphanumeric))))
       ;; query
       (sgen/map
-        non-empty-url-encoded-string-alphanumeric
-        non-empty-url-encoded-string-alphanumeric
-        {:max-elements 3})
+        (non-empty-string-alphanumeric)
+        (non-empty-string-alphanumeric)
+        {:max-elements 2})
       ;; anchor
-      url-encoded-string-alphanumeric)))
+      (sgen/string-alphanumeric))))
 ```
 
 We've used [`tuple`](https://clojure.github.io/test.check/clojure.test.check.generators.html#var-tuple) to generate the vector of elements we need using each of our generators, and passed that vector to our URL constructor. As the last step we turn it into a string.
@@ -163,7 +165,7 @@ We've used [`tuple`](https://clojure.github.io/test.check/clojure.test.check.gen
 We can now generate random URLs:
 
 ``` clojure
-(sgen/generate url-gen)
+(sgen/generate (url-gen))
 => "https://S5xusj6zS:Up9S786kGF@1QK4956802NQuGZE4vgq7Q5w689v:61603/a4jWg250687kTTS9iA3FCXLKbxT1/5aa2Pzlg0Xg9Z5gFd22v09r3/507Q838m1513t339sXeCYuhSU2RV/63HP3s0Lw9BeTgDL7?u0X1VI4hPy7P392yY8Jn4e9L394lg4=LRiDy9zLyi6MBb2J#"
 ```
 
@@ -173,8 +175,11 @@ We can now create a spec using our URL generator:
 
 ``` clojure
 (s/def ::url (s/with-gen
-                 (s/and string? #(try (url/url %) (catch Throwable t false)))
-                 (fn [] url-gen)))
+               (s/and string?
+                      #(try
+                         (url/url %)
+                         (catch Throwable t false)))
+               url-gen))
 ```
 
 [`with-gen`](https://clojure.github.io/spec.alpha/clojure.spec.alpha-api.html#clojure.spec.alpha/with-gen) takes a spec and a no-args function that returns a generator (for why?). Our spec has a short circuit to check we're dealing with a string, and then tries to construct a URL from it, failing if an exception is thrown. 
