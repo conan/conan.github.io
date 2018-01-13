@@ -2,6 +2,7 @@
 layout: post
 title:  "Automating Linkage or: How I Learned To Stop Worrying And Love The Build"
 date:   2014-08-18 16:00:00
+redirect_from: /bower/gulp/wiredep/javascript/2014/08/18/automating_linkage-or-how-i-learned-to-stop-worrying-and-love-the-build.html
 categories: bower gulp wiredep javascript
 comments: true
 ---

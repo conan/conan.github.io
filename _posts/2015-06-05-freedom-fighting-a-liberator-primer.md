@@ -2,6 +2,7 @@
 layout: post
 title:  "Freedom Fighting: A Liberator Primer"
 date:   2015-06-05 19:00:00
+redirect_from: /clojure/liberator/rest/2015/06/05/freedom-fighting-a-liberator-primer.html
 categories: clojure liberator rest
 comments: true
 ---

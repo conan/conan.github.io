@@ -7,11 +7,13 @@ description: > # this means to ignore newlines until "baseurl:"
   (let [s "have"] (some-> 'fn))
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://conan.is" # the base hostname & protocol for your site
+permalink: /blogging/:title.html
 twitter_username: ***REMOVED***
 github_username: conan
 linkedin_username: conancook
 cv_url: http://conan.is/cv/
 plugins:
+  - jekyll-redirect-from
   - jekyll-sitemap
 
 # Build settings
