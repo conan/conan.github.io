@@ -10,11 +10,12 @@ url: "http://conan.is" # the base hostname & protocol for your site
 twitter_username: conanistweeting
 github_username: conan
 cv_url: http://conan.is/cv/
-gems:
+plugins:
   - jekyll-sitemap
 
 # Build settings
 markdown: kramdown
-highlighter: pygments	
 kramdown:
-    smart_quotes: ["apos", "apos", "quot", "quot"]
+  input: GFM
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+  syntax_highlighter: rouge
