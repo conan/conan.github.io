@@ -6,16 +6,16 @@
     <!-— facebook open graph tags -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="http://conan.is"/>
-    <meta property="og:title" content="Conan Is Blogging {% if page.title %}- {{ page.title }}{% endif %}"/>
-    <meta property="og:description" content="(let [s &quot;have&quot;] (some-> 'fn))"/>
-    <meta property="og:site_name" content="Conan Is Blogging {% if page.title %}- {{ page.title }}{% endif %}"/>
+    <meta property="og:title" content="Conan Is Blogging"/>
+    <meta property="og:description" content="{% if page.title %}{{ page.title }}{% else %}(let [s &quot;have&quot;] (some-> 'fn)){% endif %}"/>
+    <meta property="og:site_name" content="Conan Is Blogging"/>
     <meta property="og:image" content="http://conan.is/assets/images/logo.png"/>
 
     <!-— twitter card tags additive with the og: tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:domain" value="conan.is" />
-    <meta name="twitter:title" value="Conan Is Blogging {% if page.title %}- {{ page.title }}{% endif %}" />
-    <meta name="twitter:description" value="(let [s &quot;have&quot;] (some-> 'fn))" />
+    <meta name="twitter:title" value="Conan Is Blogging" />
+    <meta name="twitter:description" value="{% if page.title %}{{ page.title }}{% else %}(let [s &quot;have&quot;] (some-> 'fn)){% endif %}" />
     <meta name="twitter:image" content="http://conan.is/assets/images/logo.png" />
     <meta name="twitter:url" value="http://conan.is" />
 
