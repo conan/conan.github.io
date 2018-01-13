@@ -2,6 +2,7 @@
 layout: post
 title: "Touching ClojureScript"
 date: 2016-10-28 13:30:00
+redirect_from: /clojurescript/hammer-js/2016/10/28/touching-cljs.html
 categories: clojurescript hammer-js
 comments: true
 custom_js:

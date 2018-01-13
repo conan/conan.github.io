@@ -2,6 +2,7 @@
 layout: post
 title: "Clojure On Windows"
 date: 2015-10-05 13:30:00
+redirect_from: /clojure/clojurescript/windows/2015/10/05/clojure-on-windows.html
 categories: clojure clojurescript windows
 comments: true
 ---

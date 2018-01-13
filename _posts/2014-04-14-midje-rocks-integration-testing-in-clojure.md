@@ -2,6 +2,7 @@
 layout: post
 title:  "Midje Rocks! Integration Testing In Clojure"
 date:   2014-04-14 16:23:15
+redirect_from: "/clojure/midje/testing/2014/04/14/midje-rocks-integration-testing-in-clojure.html"
 categories: clojure midje testing
 comments: true
 ---

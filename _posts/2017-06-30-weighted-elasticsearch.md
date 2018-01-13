@@ -2,6 +2,7 @@
 layout: post
 title: "Weighted Tags in Elasticsearch"
 date: 2017-06-29 13:30:00
+redirect_from: /elasticsearch/2017/06/29/weighted-elasticsearch.html
 categories: elasticsearch
 comments: true
 published: true

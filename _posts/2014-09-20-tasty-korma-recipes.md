@@ -2,6 +2,7 @@
 layout: post
 title:  "Tasty Korma Recipies"
 date:   2014-09-20 16:00:00
+redirect_from: /korma/clojure/sql/2014/09/20/tasty-korma-recipes.html
 categories: korma clojure sql
 comments: true
 ---
