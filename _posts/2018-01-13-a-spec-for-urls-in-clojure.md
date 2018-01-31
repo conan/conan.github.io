@@ -24,7 +24,10 @@ Many of these also include generators:
 
 ``` clojure
   (sgen/sample (s/gen uri?) 3)
-  => []
+  => 
+  (#object[java.net.URI 0x2c33ebfb "http://c4833483-df0c-42b5-9256-3a13db2639d2.com"]
+   #object[java.net.URI 0x41621c4e "http://41527909-73d2-4b95-9b5d-b6507c83898b.com"]
+   #object[java.net.URI 0x1e98c9ff "http://d585f324-7f35-4f3b-a39e-d48ea5489697.com"])
 ```
 
 This generator isn't very good - the URLs it generates are valid, but they're all pretty similar. We need a more comprehensive generator that will produce a wide variety of URLs; after all, variety is the spice of generative testing. 
