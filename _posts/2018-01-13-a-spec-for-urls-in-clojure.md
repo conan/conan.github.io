@@ -67,9 +67,7 @@ It features a handy constructor for URLs, `->URL`, which takes a vector of the a
 => "j1cf5jDg6toLyP"
 ```
 
-The [`fmap`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/fmap) in the first generator here lets us apply a function to the result of a generator, in this case to url-encode the string.
-
-The [`such-that`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/such-that) in the second generator takes a predicate and another generator, and filters that generator's output using the predicate. This does mean that some of the generated values are thrown away, which is wasted work, but we just want to filter out the empty strings, and they're rare compared to all possible outputs of `string-alphanumeric`. 
+The [`such-that`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/such-that) here takes a predicate and another generator, and filters that generator's output using the predicate. This does mean that some of the generated values are thrown away, which is wasted work, but we just want to filter out the empty strings, and they're rare compared to all possible outputs of `string-alphanumeric`. 
 
 ### Protocol
 
