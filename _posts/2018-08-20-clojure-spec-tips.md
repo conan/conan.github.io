@@ -112,8 +112,7 @@ Each map has its own set of properties using hierarchical namespaces:
 (s/def :company.department/employee 
   (s/keys :req [:company.department.employee/name
                 :company.department.employee/payroll-number]))
-(s/def :company.department/employees 
-  (s/coll-of :company.department/employee))
+(s/def :company.department/employees (s/coll-of :company.department/employee))
 (s/def :company.department/id uuid?)
 (s/def :company/department (s/keys :req [:company.department/id
                                          :company.department/employees]))
