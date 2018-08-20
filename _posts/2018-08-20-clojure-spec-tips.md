@@ -7,7 +7,7 @@ comments: true
 published: true
 ---
 
-This post includes some practical tips for getting the most out of spec.  I'll update it whenever I find out something new.
+This post includes some practical tips for getting the most out of spec.  I'll update it whenever I find out something new, so please feel free to tell me things I don't know.
 
 # Project setup
 
@@ -27,7 +27,7 @@ I always have a default namespace that loads when I start my REPL (using [`:init
 (stest/instrument)
 ```
 
-With those two you'll fail much faster. If you're using a [reloaded]() workflow that calls [`repl/refresh`](), you'll need to re-instrument all your functions after that; this can be noisy, so I hide the noise with a hack:
+With those two you'll fail much faster. If you're using a [reloaded](http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded) workflow that calls [`repl/refresh`](https://github.com/clojure/tools.namespace#reloading-code-usage), you'll need to re-instrument all your functions after that; this can be noisy, so I hide the noise with a hack:
 
 ``` clojure
 (defn reset
