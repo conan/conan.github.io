@@ -130,7 +130,9 @@ You can use `s/merge` to merge map specs:
                                    :car.engine/electric))
 ```        
 
-## re-usable map keys
+## Re-usable map keys
+
+In case you need to create a spec from a sequence of keys:
 
 ``` clojure
 (def some-keys [:a/key :a/nother-key])
