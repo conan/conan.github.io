@@ -50,7 +50,8 @@ I run this function when my application starts, and also use it as the `:on-jslo
 ``` clojure
 ;; in "dev" build config
 :figwheel {:on-jsload "my-ns.core/dev-setup"}
-
+```
+``` clojure
 (defn dev-setup []
   (when goog.DEBUG
     (do
