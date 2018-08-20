@@ -57,7 +57,8 @@ I run this function when my application starts, and also use it as the `:on-jslo
     (do
       (set! s/*explain-out* expound/printer)
       (enable-console-print!)
-      (js/console.warn "Running in debug mode, to see logs please set your inspector to show Verbose logging")
+      (js/console.warn 
+        "Debug mode, to see logs please set your inspector to show Verbose logging")
       (stest/instrument))))
 ```
 
@@ -73,7 +74,10 @@ If you're using [re-frame](https://github.com/Day8/re-frame) you can get some sw
   [spec db]
   (when goog.DEBUG
     (when-let [error (s/explain-data spec db)]
-      (throw (ex-info (str "DB spec validation failed: " (expound/expound-str spec db)) error)))))
+      (throw (ex-info 
+               (str "DB spec validation failed: " 
+                    (expound/expound-str spec db)) 
+               error)))))
 
 (def validate-interceptor (rf/after (partial validate :my/db)))
 ```
@@ -105,9 +109,11 @@ Each map has its own set of properties using hierarchical namespaces:
 ``` clojure
 (s/def :company.department.employee/name string?)
 (s/def :company.department.employee/payroll-number nat-int?)
-(s/def :company.department/employee (s/keys :req [:company.department.employee/name
-                                                  :company.department.employee/payroll-number]))
-(s/def :company.department/employees (s/coll-of :company.department/employee))
+(s/def :company.department/employee 
+  (s/keys :req [:company.department.employee/name
+                :company.department.employee/payroll-number]))
+(s/def :company.department/employees 
+  (s/coll-of :company.department/employee))
 (s/def :company.department/id uuid?)
 (s/def :company/department (s/keys :req [:company.department/id
                                          :company.department/employees]))
@@ -121,7 +127,7 @@ You can use `s/merge` to merge map specs:
 (s/def :car.engine/petrol (s/keys :req [:car.engine.petrol/miles-per-gallon]))
 (s/def :car.engine/electric (s/keys :req [:car.engine.electric/time-to-charge]))
 (s/def :car.engine/hybrid (s/merge :car.engine/petrol
-                                   :car.engine/electric))                                  
+                                   :car.engine/electric))
 ```        
 
 ## re-usable map keys
@@ -204,7 +210,7 @@ Spec an empty `:args` list with [`(s/cat)`](https://clojuredocs.org/clojure.spec
 # Datomic 
 
 ## Connections and databases
-```
+``` clojure
 (s/def :datomic/db #(s/or :datomic (instance? Database %)
                           :datoms (s/coll-of vector? :kind vector?)))
 (s/def :datomic/conn #(instance? Connection %))
