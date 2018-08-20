@@ -21,7 +21,7 @@ I always have a default namespace that loads when I start my REPL (using [`:init
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
 ```
 
-[orchestra](https://github.com/jeaye/orchestra) is a drop-in replacement for `clojure.spec.test` which instruments your `:ret` and `:fn` specs (I alias it as `stest`):
+We write function specs for all our functions, so we want them instrumented; [orchestra](https://github.com/jeaye/orchestra) is a drop-in replacement for `clojure.spec.test` which instruments your `:ret` and `:fn` specs (I alias it as `stest`) in addition to the `:args`:
 
 ``` clojure
 (stest/instrument)
