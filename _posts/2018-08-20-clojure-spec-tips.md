@@ -146,7 +146,7 @@ Using [`s/keys`](https://clojuredocs.org/clojure.spec.alpha/keys) is asking spec
 
 ``` clojure
 (s/def ::marmite #{true false})
-(s/def :unknown/keys (s/keys))
+(s/def :unknown/keys (s/keys)) ;; no mention of what should be in here
 (s/explain :unknown/keys {::marmite "yum!"})
 In: [:user/marmite] val: "yum!" fails spec: :user/marmite at: [:user/marmite] predicate: #{true false}
 ```
