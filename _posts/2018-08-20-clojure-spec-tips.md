@@ -11,7 +11,9 @@ This post includes some practical tips for getting the most out of spec.  I'll u
 
 # Project setup
 
-## Clojure
+<a href="#clojure">
+  ## Clojure
+</a>
 
 I always have a default namespace that loads when I start my REPL (using [`:init-ns`](https://github.com/technomancy/leiningen/blob/master/sample.project.clj#L369)), and I run a couple of side effects when it loads.
 
