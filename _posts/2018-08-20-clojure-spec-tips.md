@@ -236,6 +236,11 @@ The [naming conventions for nested maps](#naming-conventions-for-nested-maps) tr
 
 This way you can provide entity validation on the way in and out of Datomic, and easily populate a test database with generated data using [`gen/sample`](https://clojure.github.io/spec.alpha/clojure.spec.gen.alpha-api.html#clojure.spec.gen.alpha/sample) or [`s/exercise`](https://clojuredocs.org/clojure.spec.alpha/exercise). 
 
+A useful heuristic is this:
+
+* If a `ref` has the `isComponent` property, add another level to the namespace hierarchy
+* If a `ref` has a unique identifier instead, reset back to the top of the hierarchy
+
 ## Pull patterns
 
 You can make a pull pattern for Datomic's [Pull API](https://docs.datomic.com/on-prem/pull.html) by parsing the spec you've defined using the [`s/form`](https://clojuredocs.org/clojure.spec.alpha/form) function to return the spec as data (a vector), which can then be destructured:
