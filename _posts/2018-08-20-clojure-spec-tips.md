@@ -104,7 +104,7 @@ This will blow up every time one of your handlers attempts to update the app-db 
 
 ## Naming conventions for nested maps
 
-Each map has its own set of properties using hierarchical namespaces:
+I find it useful to have a predictable structure to my data.  This can be achieved by ensuring each map has its own set of properties, and that the hierarchy is modelled in the namespaces:
 
 ``` clojure
 (s/def :company.department.employee/name string?)
@@ -117,6 +117,7 @@ Each map has its own set of properties using hierarchical namespaces:
 (s/def :company/department (s/keys :req [:company.department/id
                                          :company.department/employees]))
 ```        
+This approach is verbose but there are no surprises, which keeps things nice and simple.  There are as many different ways to model data as there are domains, but this one is a useful default if you're unsure.
 
 ## Merging map specs
 
