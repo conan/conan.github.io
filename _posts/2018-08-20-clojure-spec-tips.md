@@ -136,7 +136,7 @@ In case you need to create a spec from a sequence of keys:
 ``` clojure
 (def some-keys [:a/key :a/nother-key])
 (s/def :a/spec (s/keys :req (var-get some-keys)))
-(s/valid? :a/spec {:a/key 1 :a/nother-key 2}
+(s/valid? :a/spec {:a/key 1 :a/nother-key 2})
 => true
 ```
 
