@@ -129,17 +129,6 @@ You can use `s/merge` to merge map specs:
                                    :car.engine/electric))
 ```        
 
-## Re-usable map keys
-
-In case you need to create a spec from a sequence of keys:
-
-``` clojure
-(def some-keys [:a/key :a/nother-key])
-(s/def :a/spec (s/keys :req (var-get some-keys)))
-(s/valid? :a/spec {:a/key 1 :a/nother-key 2})
-=> true
-```
-
 ## Empty map specs
 
 Using [`s/keys`](https://clojuredocs.org/clojure.spec.alpha/keys) is asking spec to check the value of every key in the map that has a matching spec. If you don't specify `:req` or `:opt`, that's all it will do. It isn't possible to exclude keys from a map using spec, so you can't actually specify that a map must be empty.
