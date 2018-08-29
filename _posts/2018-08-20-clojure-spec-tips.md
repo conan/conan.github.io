@@ -175,12 +175,7 @@ Function arguments are positional; to define specs for them we can use [regex sp
   :args (s/cat :m (s/keys) :k keyword?))
 ```
 
-We could also use a [tuple](https://clojuredocs.org/clojure.spec.alpha/tuple):
-
-``` clojure
-(s/fdef clojure.core/get
-  :args (s/tuple (s/keys) keyword?))
-```
+We can't use a [tuple](https://clojuredocs.org/clojure.spec.alpha/tuple) because it defines a vector, and oddly function arguments are not vectors.
 
 If we expect lots of the same thing (so don't care about position) we can use [`coll-of`](https://clojuredocs.org/clojure.spec.alpha/coll-of):
 
