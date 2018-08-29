@@ -158,8 +158,8 @@ There's a problem here though: the OR is not exclusive, so this spec will allow 
 We can fix this madness by using [`s/or`](https://clojuredocs.org/clojure.spec.alpha/or), which is an exclusive OR (XOR):
 
 ``` clojure
-(s/def :popcorn/type (s/or (s/keys :req [:my.popcorn/kernel :popcorn.type/salty?])
-                           (s/keys :req [:my.popcorn/kernel :popcorn.type/sweet?])))
+(s/def :popcorn/type (s/or (s/keys :req [:my.popcorn/kernel :my.popcorn.type/salty?])
+                           (s/keys :req [:my.popcorn/kernel :my.popcorn.type/sweet?])))
 ```
 
 This unfortunately does involve duplication, but if our specs are large we could solve that by using [`s/merge`](#merging-map-specs). Simple over easy.
