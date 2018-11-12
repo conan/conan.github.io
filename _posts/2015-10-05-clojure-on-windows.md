@@ -31,7 +31,21 @@ GitHub explain [how to create ssh keys in Git Bash](https://help.github.com/arti
 
 ### Remember git ssh key passphrase with ssh-agent
 
-Add `eval $(ssh-agent)` to your `.bash_profile`.
+Add `eval $(ssh-agent)` to your `.bash_profile`.  Then make the agent remember your git passphrase by creating an SSH config file:
+
+    touch ~/.ssh/config
+    chmod 600 ~/.ssh/config
+    
+Put this in it:
+
+    Host github.com
+    HostName github.com
+    User git
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa
+    AddKeysToAgent yes
+
+That last line ensures that you'll only be prompted for your passphrase once per session.  Alternatively, if you'd like to be prompted when you start a new terminal, add `ssh-add` to your `.bash_profile` (or `ssh-add /path/to/key` if you use a different key).
 
 ### Aliases
 
