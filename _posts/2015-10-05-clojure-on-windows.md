@@ -38,14 +38,9 @@ Add `eval $(ssh-agent)` to your `.bash_profile`.  Then make the agent remember y
     
 Put this in it:
 
-    Host github.com
-    HostName github.com
-    User git
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/id_rsa
     AddKeysToAgent yes
 
-That last line ensures that you'll only be prompted for your passphrase once per session.  Alternatively, if you'd like to be prompted when you start a new terminal, add `ssh-add` to your `.bash_profile` (or `ssh-add /path/to/key` if you use a different key).
+This ensures that you'll only be prompted for your passphrase once per session.  Alternatively, if you'd like to be prompted when you start a new terminal, add `ssh-add` to your `.bash_profile` after the `eval $(ssh-agent)`.
 
 ### Aliases
 
