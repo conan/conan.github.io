@@ -7,19 +7,21 @@ categories: clojure clojurescript windows
 comments: true
 ---
 
-### Updated: 14/09/2017
+### Updated: 14/11/2018
 
-Most Clojure developers seem to use Linux or OSX, and the community is heavily predisposed towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason.  Clojure development on Windows is surprisingly smooth, but here's a guide to get you started anyway (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
+Most Clojure developers use Linux or OSX, and the community is slightly biased towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason, primarily with the [Cursive plugin for Intellij](https://cursive-ide.com).  Clojure development on Windows is smooth, and this is a guide to get you started (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
+
+You can read more about the choices made by the wider Clojure community in Cognitect's [State of Clojure](http://blog.cognitect.com/blog/2017/1/31/clojure-2018-results) survey results.
 
 # Terminal setup
 
-The best solution is to install the [Windows Subsystem for Linux](https://msdn.microsoft.com/en-gb/commandline/wsl/install_guide).
+The best solution is to install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
 
 ## Git 
 
 Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings (except notepad), but many Linux and OSX tools can't cope with CRLF.  I always set
 
-    git config core.autocrlf input
+    git config --global core.autocrlf input
     
 to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong.  Do this in both Bash for Windows and in cmd.
 
@@ -40,7 +42,7 @@ Put this in it:
 
     AddKeysToAgent yes
 
-This ensures that you'll only be prompted for your passphrase once per session.  Alternatively, if you'd like to be prompted when you start a new terminal, add `ssh-add` to your `.bash_profile` after the `eval $(ssh-agent)`.
+This ensures that you'll only be prompted for your passphrase once per session, and credentials will be cached in the ssh-agent.  Alternatively, if you'd like to be prompted when you start a new terminal, add `ssh-add` to your `.bash_profile` on the line after the `eval $(ssh-agent)`.
 
 ### Aliases
 
@@ -61,7 +63,7 @@ This isn't as good as regular bash aliases, as you still have to type `git` at t
     
 ## Colours
 
-I can't be bothered to learn how ANSI escape sequences and XTERM colours and stuff, just paste this in your `.bash_profile`:
+I can't be bothered to learn about ANSI escape sequences and XTERM colours and stuff, just paste this in your `.bash_profile`:
 
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[38;5;197m\]$(__git_ps1 "(%s)")\[\033[00m\]$ '
 
@@ -152,7 +154,7 @@ Change the 8s for 9s if you want Java 9 (may or may not apply to the repo name).
 
 # Leiningen
 
-Follow the [official instructions](https://leiningen.org/#install).
+Follow the [official instructions](https://leiningen.org/#install) to install it in WSL.  You can install it in Windows as well if you want to be able to run it from a cmd terminal, which might be useful if you're doing things like user-agent testing with webdriver.
 
 # IDE
 
@@ -175,7 +177,7 @@ Further down in the Clojure section set:
 
 ### Keybindings
 
-You can apply some default keybindings for Cursive's operations by going to Settings > Keymap > Clojure Keybindings.  It doesn't let you edit individual keybindings here (you do that in the usual IntelliJ way), but it can apply a whole set of Clojure-related keybindings for you in one go.  I recommend starting with the Cursive ones; open the Binding Set dropdown, select Cursive and press Apply.  This is also a really handy place to find out what commands are available that relate to Clojure.  You can also find commands in the regular IntelliJ menus at Edit > Structural Editing and Navigate > Structural Navigation.  I can't recommend enough trying out _all_ of the commands available, as you're guaranteed to find some that are essential to your style of working.
+You can apply some default keybindings for Cursive's operations by going to Settings > Keymap > Clojure Keybindings.  It doesn't let you edit individual keybindings here (you do that in the usual IntelliJ way), but it can apply a whole set of Clojure-related keybindings for you in one go.  I recommend starting with the Cursive ones; open the Binding Set dropdown, select Cursive and press Apply.  This is also a really handy place to find out what commands are available that relate to Clojure.  You can also find commands in the regular IntelliJ menus at Edit > Structural Editing and Navigate > Structural Navigation.  I strongly recommend trying out _all_ of the commands available, as you're guaranteed to find some that are essential to your style of working.
 
 ### Default settings
 
@@ -188,21 +190,15 @@ The first will stop your comments being autoformatted away from the end of your 
 
 ### Indentation
 
-The "Default to only indent" setting above is a little tricky to understand.  Cursive allows you to specify a number from 0 to 9 that defines how many forms after the first should be aligned with each other.  0 means all of them, "Indent" means none of them.  By clicking on a function or macro name in a form in your editor, you'll get a little yellow lightbulb that lets you adjust the indentation parameter for that symbol.  I recommend starting with Indent as the default (using the setting above) and adjusting individual forms that you want different behaviour from.  It's best explained with examples. 
+The "Default to only indent" setting above is a little tricky to understand.  The indentation setting determines how many spaces are added at the start of a line when you add a line break inside a form. Cursive allows you to specify a number from 0 to 9 that defines which item after the first in a form should be used for alignment.  "Indent" means always to use 2-space indent; "0" means to align everything with the item at index 0 (i.e. the first) _after_ the first item in the form (the function or macro).  
 
-#### Indentation: 0
+By clicking on a function or macro name in a form in your editor, you'll get a little yellow lightbulb that lets you adjust the indentation parameter for that symbol.  I recommend starting with Indent as the default (using the setting above) and adjusting individual forms that you want different behaviour from. Cursive has a [handy animation](https://cursive-ide.com/userguide/formatting.html) showing where to find this setting. 
 
-When using a threading macro, I want all forms nicely aligned with the first so it's easy to read the flow:
-
-{% highlight clojure %}
-(->> cars-map
-     (group-by :manufacturer)
-     count)
-{% endhighlight %}
+Sound weird? It's best explained with examples. 
 
 #### Indentation: Indent
 
-When using a `let` block, I never want anything aligned with the first argument to `let`, which is a vector of binding forms:
+When using a `let` block, I never want anything aligned with the first argument to `let`, which is a vector of binding forms, so I use "Indent":
 
 {% highlight clojure %}
 (let [x-coord 1
@@ -211,7 +207,19 @@ When using a `let` block, I never want anything aligned with the first argument 
   [x y])
 {% endhighlight %}
 
-Here the `println` and the vector that we're returning from the block are nicely aligned with Clojure's idiomatic 2-space indent.  There's no need to push them across the page to align with the binding form that defines `x-coord` and `y-coord`.
+Here the `println` and the `[x y]` are nicely aligned with Clojure's idiomatic 2-space indent.  There's no need to push them across the page to align with the binding form that defines `x-coord` and `y-coord`.
+
+#### Indentation: 0
+
+When using a threading macro, I want all forms nicely aligned with the first (index 0) so it's easy to read the flow:
+
+{% highlight clojure %}
+(->> cars-map
+     (group-by :manufacturer)
+     count)
+{% endhighlight %}
+
+In this form, the first element is the `->>` macro.  Numbering the elements after that starting with 0, first (index 0) is `cars-map`; setting indentation to "0" means to align with this element, which is why the `(group-by :manufacturer)` and `count` are aligned with it.
 
 #### Indentation: n
 
@@ -222,30 +230,23 @@ I must confess, I very rarely use anything but 0 or Indent.  `update-in` is a go
                             :fave-colour "green")
 {% endhighlight %}
 
-We don't want the `print` any more than two spaces indented, but it's nice to have the exception name aligned with the exception Class.  Of course in practice, we'd put both of those on the same line.  Like I said, I rarely use this type of indentation. 
+Here, we want all the keys and values we're passing to `assoc` to be nicely aligned. This means that when we break a line, we want to align with the first key that's being passed - in this case, `:email`.  In this form, `:email` is at position 3 after the `update-in`, so we set the indentation to "3".  To be super-clear, here are the indexes:
+
+0: `db`
+1: `[:user]`
+2: assoc
+3: `:email`
+4: "milicent@example.org"
+
+### Java classpath length workaround
+
+The JVM on Windows limits the classpath length, after which any attempt to start a JVM will fail (and if you do it from IntelliJ, it will hang).  Clojure projects - especially ones combined with ClojureScript projects - can easily hit this limit in Cursive, as the path to each dependency can be quite long.  Cursive now has a workaround for this, and I recommend setting up every new build configuration to use it.  
+
+Open up your build configuration, and you'll see a dropdown entitled "Shorten command line" (if you don't see it, you may need an EAP build of Cursive, instructions in the [user guide](https://cursive-ide.com/userguide/)). Select `classpath file` and Cursive will write the classpath into a file and use that, bypassing the classpath length limitation.
 
 ### Figwheel
 
-If you write ClojureScript, you're probably using [Figwheel](https://github.com/bhauman/lein-figwheel).  It's possible to run  Figwheel in an Intellij REPL, details [here](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
-  
-Here's the short version: you'll need to add a small file, set up a build config to run in a normal JVM and add a parameter.  
-
-1. Create a file called `dev/repl.clj`, containing this:
-
-{% highlight clojure %}
-;; This does not require a namespace declaration. See the README or
-;; https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL
-;; for more details.
-(use 'figwheel-sidecar.repl-api)
-(start-figwheel!)
-(cljs-repl)
-{% endhighlight %}
-
-2. Go to run configurations and create a new local Clojure REPL, and choose "Use clojure.main in a normal JVM process".
-
-3. Add `dev/repl.clj` to the Parameters of the run configuration.
-
-Voila!  Now you can run Figwheel within Cursive's REPL environment.
+If you write ClojureScript, you're probably using [figwheel-main](https://github.com/bhauman/figwheel-main), which replaces the deprecated [lein-figwheel](https://github.com/bhauman/lein-figwheel).  It's possible to [run figwheel-main in an Intellij REPL](https://github.com/bhauman/figwheel-main/blob/master/docs/docs/cursive.md) (and you can also [run lein-figwheel in an Intellij REPL](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
 
 ## Line endings and file encodings
 
