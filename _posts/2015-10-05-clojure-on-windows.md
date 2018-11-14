@@ -237,7 +237,7 @@ Here, we want all the keys and values we're passing to `assoc` to be nicely alig
 1. `[:user]`
 2. assoc
 3. `:email`
-4. "milicent@example.org"
+4. `"milicent@example.org"`
 
 ### Java classpath length workaround
 
