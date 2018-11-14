@@ -7,6 +7,7 @@ categories: clojure clojurescript windows
 comments: true
 ---
 
+# Introduction
 ### Updated: 14/11/2018
 
 Most Clojure developers use Linux or OSX, and the community is slightly biased towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason, primarily with the [Cursive plugin for Intellij](https://cursive-ide.com).  Clojure development on Windows is smooth, and this is a guide to get you started (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
