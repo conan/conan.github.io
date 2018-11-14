@@ -233,11 +233,11 @@ I must confess, I very rarely use anything but 0 or Indent.  `update-in` is a go
 
 Here, we want all the keys and values we're passing to `assoc` to be nicely aligned. This means that when we break a line, we want to align with the first key that's being passed - in this case, `:email`.  In this form, `:email` is at position 3 after the `update-in`, so we set the indentation to "3".  To be super-clear, here are the indexes:
 
-0. `db`
-1. `[:user]`
-2. assoc
-3. `:email`
-4. `"milicent@example.org"`
+* 0: `db`
+* 1: `[:user]`
+* 2: assoc
+* 3: `:email`
+* 4: `"milicent@example.org"`
 
 ### Java classpath length workaround
 
