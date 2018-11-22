@@ -192,6 +192,40 @@ Spec an empty `:args` list with [`(s/cat)`](https://clojuredocs.org/clojure.spec
 (s/fdef clojure.core/clojure-version
   :args (s/cat)))
 ```
+# Testing
+
+Spec comes with generative testing built-in.  If we're writing function specs, it makes sense to use them to confirm the correctness of our pure functions.  If we've specified both `:args` and `:ret` specs for a function, we can generate a large number of conforming inputs and check that all the outputs also conform.  
+
+This is a helper function I use for writing tests. It's a wrapper around `clojure.spec.test.alpha/check`, which performs a generative test on a given function.  You pass it the symbol for the function, and it generates 1000 invocations (by default) of that function using inputs randomly generated from the `:args` spec, checking that the output for each is valid according to the `:ret` spec (I say randomly, generative testing is actually smarter than that and attempts to find the smallest failing value it can through a process called [shrinking](https://github.com/clojure/test.check#examples)).  This wrapper simply ensures that we get either a boolean `true` result, or details of the spec failure nicely formatted by expound; this is because `stest/check` returns a data structure which we have to parse to get nice `clojure.test` integration:
+
+``` clojure
+(ns conan.test-util
+  (:require [clojure.spec.test.alpha :as stest]
+            [clojure.test :refer :all]
+            [expound.alpha :as expound]))
+
+(defn check
+  "Passes sym to stest/check with a :max-size of 3 (i.e. generated sequences will have no 
+  more than 3 elements, returning true if the test passes or the explained error if not"
+  [sym]
+  (let [check-result (stest/check sym {:clojure.spec.test.check/opts {:max-size 3}})
+        result (-> check-result
+                   first ;; stest/check accepts a variable number of syms, this does not
+                   :clojure.spec.test.check/ret
+                   :result)]
+    (when-not (true? result)
+      (expound/explain-results check-result))
+    result))
+```
+
+This gives us a super easy way of running tests for our functions using `clojure.test`:
+
+``` clojure
+(deftest myfn-test
+  (is (true? (tu/check `conan/myfn))))
+```
+
+This test will either pass, or print out a spec error.  We write specs for all our functions, and add a test for every pure function in this manner.  You could write a macro to wrap this up even further.
 
 # Datomic 
 
