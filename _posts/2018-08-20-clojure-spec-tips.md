@@ -205,12 +205,12 @@ This is a helper function I use for writing tests. It's a wrapper around `clojur
             [expound.alpha :as expound]))
 
 (defn check
-  "Passes sym to stest/check with a :max-size of 3 (i.e. generated sequences will have no 
+  "Passes sym to stest/check with a :max-size of 3 (generated sequences will have no 
   more than 3 elements, returning true if the test passes or the explained error if not"
   [sym]
   (let [check-result (stest/check sym {:clojure.spec.test.check/opts {:max-size 3}})
         result (-> check-result
-                   first ;; stest/check accepts a variable number of syms, this does not
+                   first ;; stest/check accepts a variable number of syms, this doesn't
                    :clojure.spec.test.check/ret
                    :result)]
     (when-not (true? result)
