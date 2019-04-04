@@ -12,12 +12,68 @@ comments: true
 
 Most Clojure developers use Linux or OSX, and the community is slightly biased towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason, primarily with the [Cursive plugin for Intellij](https://cursive-ide.com).  Clojure development on Windows is smooth, and this is a guide to get you started (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
 
-You can read more about the choices made by the wider Clojure community in Cognitect's [State of Clojure](http://blog.cognitect.com/blog/2017/1/31/clojure-2018-results) survey results.
+You can read more about the choices made by the wider Clojure community in Cognitect's [State of Clojure](https://clojure.org/news/2019/02/04/state-of-clojure-2019) survey results.
 
 # Terminal setup
 
-The best solution is to install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+The best solution is to install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), and to use it with [ConEmu](https://conemu.github.io/).
+    
+## Colours
 
+I can't be bothered to learn about ANSI escape sequences and XTERM colours and stuff, just paste this in your `.bash_profile`:
+
+    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[38;5;197m\]$(__git_ps1 " (%s)")\[\033[00m\]$ '
+
+## ConEmu
+
+Install [ConEmu](https://conemu.github.io/).  It provides a tabbed, split environment that can host any other consoles. It's worth having a look through all the settings as it's extremely customisable, but here are a few key ones. 
+
+### Buffer size
+
+You want a long buffer.  You can't have a infinite one like on Linux, but you can make it long in Settings > General > Size & Pos > Long console output.  Set it to `32766` (the maximum).
+
+### One tab per group
+
+When displaying multiple consoles in a window, I want them all also to be within a single tab.  Go to Settings > Main > Tab bar and check the "One tab per group" checkbox.
+
+### Copy/Pasting
+
+There are a number of settings related to copy/pasting behaviour, but there's one in particular that I find annoying.  ConEmu will pop up a warning menu if you paste more than 200 characters or an enter keypress by default, but you can turn these off in the Settings > Keys & Macro > Paste section under "Confirm <Enter> keypress" and "Confirm pasting more than X chars". 
+
+### Set Bash for Windows as default terminal
+
+Conemu now asks you which terminal you want to use when you first start it, so make sure WSL is installed and working first, and select it.  For reference (Conemu will set this for you), your `{Bash:bash}` command will look like this:
+
+    set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
+
+Go to Settings > Startup > Tasks and edit `{Bash::bash}` if it already exists (or press the + button at the bottom of the list if it doesnt and set the command in the big box to be as above). Set the task up to have the name `Bash::bash`, check all the boxes, set the task parameters to be:
+
+    /icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1804.2018.817.0_x64__79rhkp1fndgsc\ubuntu.exe"
+    
+This will get you a nice icon.  If you've got a slightly different version of Ubuntu, the path might be slightly different; to find it, open the Start menu, search for "Ubuntu", right click on the Ubuntu command result and choose "Open file location".
+    
+Don't forget to press the "Save settings" button at the bottom.
+
+_NOTE: Getting the current directory in the tab title for WSL Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar), and I've never got it working._
+
+### Keyboard shortcuts
+
+These are some keyboard shortcuts I use to duplicate what iTerm got me used to.  Edit them by going to Settings > Keys & Macro.
+
+#### Split horizontal/vertical
+
+iTerm got me used to splitting terminal windows horizontally and vertically, filling the other half with a duplicate terminal.  The user shortcuts are called "Split: Duplicate active 'shell' split to bottom" and "Split: Duplicate active 'shell' split to right.  I use `Ctrl+Shift+H` and `Ctrl+Shift+V`.
+
+#### Clear buffer shortcut
+
+I like how iTerm allows the current buffer to be cleared with `Alt+K`.  I can't reproduce this behaviour exactly here (something to do with [not clearing buffers of running programs](http://superuser.com/questions/898426/clear-console-buffer-in-conemu-with-cygwin)), but it is possible to clear the buffer with `Alt+K` when no other command is running, by going to Settings > Keys & Macro, and adding a shortcut in one of the Macro slots.  Set the Hotkey to be `Alt+K` and the Description to be:
+ 
+     print("\e echo -e '\0033\0143' \n")  
+     
+Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.  What this does is type a command to clear the buffer and press enter for you, but you won't want this command clogging up your bash history.  Once you've got Git Bash on the go (see below), you can tell it to leave all `echo` commands such as this one out of your history by adding this to your `.bash_profile`:
+  
+    export HISTIGNORE=echo*
+    
 ## Git 
 
 Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings (except notepad), but many Linux and OSX tools can't cope with CRLF.  I always set
@@ -25,8 +81,6 @@ Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think 
     git config --global core.autocrlf input
     
 to make sure that I'm always using LF everywhere.  This is the only setup that doesn't give me occasional problems around line endings, and is much easier to think about - if it's not LF anywhere, on my machine or anyone else's, it's wrong.  Do this in both Bash for Windows and in cmd.
-
-_WARNING:_ If you use SourceTree, it will break your line endings if you discard changes.  Just for kicks.
 
 ### Create ssh keys
 
@@ -61,61 +115,25 @@ This isn't as good as regular bash aliases, as you still have to type `git` at t
     alias gl='git log --graph --pretty=format:'\''%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset\'\'' --abbrev-commit'
     alias ga='git add .'
     alias grp='git remote prune origin'
-    
-## Colours
 
-I can't be bothered to learn about ANSI escape sequences and XTERM colours and stuff, just paste this in your `.bash_profile`:
+### Beyond Compare (or other Windows GUI diff/merge tool)
 
-    PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \[\033[38;5;197m\]$(__git_ps1 "(%s)")\[\033[00m\]$ '
+I use [Beyond Compare 4] for resolving git merge conflicts.  There's a good [blog post](https://www.sep.com/sep-blog/2017/06/07/20170607wsl-git-and-beyond-compare/) on how to set it up, but it's focused on solving the problem that you can't edit files on the wsl filesystem from Windows applications.  Now you can [access WSL files from Windows](https://betanews.com/2019/02/16/access-linux-files-from-windows/), but actually there's no need.  Put your code in your Windows home directory (`C:\Users\conan\dev` in my case), and you can find it in WSL (at `/mnt/c/Users/conan/dev` for me), as your `C:\` drive is automatically shared at `/mnt/c` - I think other drives are similarly shared automatically.  Then Intellij, Beyond Compare and any other Windows tools you like can happily edit the files, as can WSL tools.
 
-## ConEmu
+WSL can also [run Windows commands](https://docs.microsoft.com/en-us/windows/wsl/interop#run-windows-tools-from-wsl) from WSL now, so we have all we need.  
 
-Install [ConEmu](https://conemu.github.io/).  It provides a tabbed, split environment that can host any other consoles. It's worth having a look through all the settings as it's extremely customisable, but here are a few key ones. 
+To set Beyond Compare as your merge tool, in WSL edit your `~/.gitconfig` file to have the following:
 
-### Buffer size
+    [merge]
+        guitool = bcomp
+        tool = bcomp
+    [mergetool]
+        prompt = false
+    [mergetool "bcomp"]
+        trustExitCode = true
+        cmd = '"/mnt/c/Program Files/Beyond Compare 4/BCompare.exe"' \"$LOCAL\" \"$REMOTE\" \"$BASE\" \"$MERGED\"
 
-You want a long buffer.  You can't have a infinite one like on Linux, but you can make it long in Settings > Main > Size & Pos > Long console output.  Set it to 9999.
-
-### One tab per group
-
-When displaying multiple consoles in a window, I want them all also to be within a single tab.  Go to Settings > Main > Tab bar and check the "One tab per group" checkbox.
-
-### Copy/Pasting
-
-There are a number of settings related to copy/pasting behaviour, but there's one in particular that I find annoying.  ConEmu will pop up a warning menu if you paste more than 200 characters or an enter keypress by default, but you can turn these off in the Settings > Keys & Macro > Paste section under "Confirm <Enter> keypress" and "Confirm pasting more than X chars". 
-
-### Set Bash for Windows as default terminal
-
-
-Go to Settings > Startup > Tasks and edit `{Bash::bash}` if it already exists, or press the + button at the bottom of the list if it doesnt. Set the task up to have the name `Bash::bash`, check all the boxes, set the task parameters to be:
-
-    -icon "%USERPROFILE%\AppData\Local\lxss\bash.ico"
-    
-Set the console command in the big box at the bottom to be:
-    
-    %windir%\system32\bash.exe -cur_console:pm:/mnt --login -i -new_console
-    
-Don't forget to press the "Save settings" button at the bottom.
-
-_NOTE: Getting the current directory in the tab title for Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar)._
-
-### Keyboard shortcuts
-
-These are some keyboard shortcuts I use to duplicate what iTerm got me used to.  Edit them by going to Settings > Keys & Macro.
-
-#### Split horizontal/vertical
-
-iTerm got me used to splitting terminal windows horizontally and vertically, filling the other half with a duplicate terminal.  The user shortcuts are called "Split: Duplicate active 'shell' split to bottom" and "Split: Duplicate active 'shell' split to right.  I use `Ctrl+Shift+H` and `Ctrl+Shift+V`.
-
-#### Clear buffer shortcut
-
-I like how iTerm allows the current buffer to be cleared with `Alt+K`.  I can't reproduce this behaviour exactly here (something to do with [not clearing buffers of running programs](http://superuser.com/questions/898426/clear-console-buffer-in-conemu-with-cygwin)), but it is possible to clear the buffer with `Alt+K` when no other command is running, by going to Settings > Keys & Macro, and adding a shortcut in one of the Macro slots.  Set the Hotkey to be `Alt+K` and the Description to be:
- 
-     print("\e echo -e '\0033\0143' \n")  
-     
-Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.  What this does is type a command to clear the buffer and press enter for you, but you won't want this command clogging up your bash history.  Once you've got Git Bash on the go (see below), you can tell it to leave all `echo` commands such as this one out of your history by adding this to your `.bash_profile`:
-  
-    export HISTIGNORE=echo*
+You can do similar for your difftool, I just use the terminal display for that personally.
 
 ## GPG
 
@@ -153,7 +171,13 @@ You can't just install Oracle Java, instead you have to do this:
     
 Change the 8s for 9s if you want Java 9 (may or may not apply to the repo name).
 
-# Leiningen
+# Dependency & Build tools
+
+## Clojure CLI
+
+Follow the [official instructions](https://clojure.org/guides/getting_started#_installation_on_linux) to install the clojure cli tools in bash in WSL. Cursive will use its own, built-in version for now (see below), although the [Clojure CLI tools for Windows](https://clojure.org/guides/getting_started#_installation_on_windows) are coming.
+
+## Leiningen
 
 Follow the [official instructions](https://leiningen.org/#install) to install it in WSL.  You can install it in Windows as well if you want to be able to run it from a cmd terminal, which might be useful if you're doing things like user-agent testing with webdriver.
 
@@ -161,9 +185,13 @@ Follow the [official instructions](https://leiningen.org/#install) to install it
 
 [IntelliJ](https://www.jetbrains.com/idea/download/) offers the most sophisticated development experience on Windows, matched only by Emacs - but if you're using Emacs, are you sure you wouldn't prefer OSX or Linux?  I don't know much about Emacs and Clojure on Windows, but I know you'll want [Cider](https://github.com/clojure-emacs/cider) and some refactorings like [clj-refactor](https://github.com/clojure-emacs/clj-refactor.el).  Special mention also goes to [LightTable](http://lighttable.com/), which is great at Clojure but not so much other things; given that Clojure development requires you to work with Java or JavaScript at some point, it doesn't cut the mustard for me.  For now I'm assuming you're using IntelliJ.
 
+## Line endings and file encodings
+
+Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope. Do this for every project, in particular try to remember to do this when you create a new one.  I tend to create new projects from inside WSL to ensure this is correct.  You can see what line endings you're using in the bottom right of Intellij's status bar.
+
 ## Cursive
 
-Clojure development in IntelliJ is made possible by the fantastic [Cursive](https://cursiveclojure.com/).  Head over to the [Getting Started](https://cursiveclojure.com/userguide/) guide, which will explain how to download and install the IntelliJ plugin.  
+Clojure development in IntelliJ is made possible by the fantastic [Cursive](https://cursiveclojure.com/).  Head over to the [Getting Started](https://cursiveclojure.com/userguide/) guide, which will explain how to download and install the IntelliJ plugin. 
 
 ### Structural Editing
 
@@ -245,10 +273,10 @@ The JVM on Windows limits the classpath length, after which any attempt to start
 
 Open up your build configuration, and you'll see a dropdown entitled "Shorten command line" (if you don't see it, you may need an EAP build of Cursive, instructions in the [user guide](https://cursive-ide.com/userguide/)). Select `classpath file` and Cursive will write the classpath into a file and use that, bypassing the classpath length limitation.
 
+### Clojure CLI
+
+If you're using tools.deps in a project with a `deps.edn` file, you'll need the clojure cli tools.  Always choose to let Cursive "Use tools.deps directly", and be sure to download and use the latest version (as it's all still in alpha).  You'll find the option at: Build, Execution & Deployment > Build Tools > Clojure Deps in the Intellij settings.
+
 ### Figwheel
 
 If you write ClojureScript, you're probably using [figwheel-main](https://github.com/bhauman/figwheel-main), which replaces the deprecated [lein-figwheel](https://github.com/bhauman/lein-figwheel).  It's possible to [run figwheel-main in an Intellij REPL](https://github.com/bhauman/figwheel-main/blob/master/docs/docs/cursive.md) (and you can also [run lein-figwheel in an Intellij REPL](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
-
-## Line endings and file encodings
-
-Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope. 
