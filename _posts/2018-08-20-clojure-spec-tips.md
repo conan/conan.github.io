@@ -23,8 +23,9 @@ I always have a default namespace that loads when I start my REPL (using [`:init
   https://github.com/bhb/expound/blob/master/doc/faq.md"
   []
   (with-out-str (stest/instrument))
-  (alter-var-root #'s/*explain-out* (constantly (expound/custom-printer {:theme :figwheel-theme}))))
-  
+  (alter-var-root #'s/*explain-out* 
+    (constantly (expound/custom-printer {:theme :figwheel-theme}))))
+
 (instrument)
 ```
 
