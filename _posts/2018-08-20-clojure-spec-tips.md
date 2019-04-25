@@ -15,16 +15,17 @@ This post includes some practical tips for getting the most out of spec.  I'll u
 
 I always have a default namespace that loads when I start my REPL (using [`:init-ns`](https://github.com/technomancy/leiningen/blob/master/sample.project.clj#L369)), and I run a couple of side effects when it loads.
 
-[expound]() formats your spec output better:
+[expound](https://github.com/bhb/expound) formats your spec output better. I like to write function specs for my functions, so I want them instrumented; [orchestra](https://github.com/jeaye/orchestra) is a drop-in replacement for `clojure.spec.test` which instruments your `:ret` and `:fn` specs (I alias it as `stest`) in addition to the `:args`:
 
 ``` clojure
-(alter-var-root #'s/*explain-out* (constantly expound/printer))
-```
-
-We write function specs for all our functions, so we want them instrumented; [orchestra](https://github.com/jeaye/orchestra) is a drop-in replacement for `clojure.spec.test` which instruments your `:ret` and `:fn` specs (I alias it as `stest`) in addition to the `:args`:
-
-``` clojure
-(stest/instrument)
+(defn instrument
+  "Silently instruments function specs for all functions and sets the expound printer
+  https://github.com/bhb/expound/blob/master/doc/faq.md"
+  []
+  (with-out-str (stest/instrument))
+  (alter-var-root #'s/*explain-out* (constantly (expound/custom-printer {:theme :figwheel-theme}))))
+  
+(instrument)
 ```
 
 With those two you'll fail much faster. If you're using a [reloaded](http://thinkrelevance.com/blog/2013/06/04/clojure-workflow-reloaded) workflow that calls [`repl/refresh`](https://github.com/clojure/tools.namespace#reloading-code-usage), you'll need to re-instrument all your functions after that; this can be noisy, so I hide the noise with a hack:
@@ -34,7 +35,7 @@ With those two you'll fail much faster. If you're using a [reloaded](http://thin
   []
   ;; do some reloaded stuff here
   (repl/refresh)
-  (with-out-str (stest/instrument)))
+  (instrument))
 ```
 
 ## Clojurescript
@@ -93,6 +94,33 @@ Then hook it in to every event handler (it's boilerplate, but it's worth it; you
 ```
 
 This will blow up every time one of your handlers attempts to update the app-db with invalid data.
+# Utility specs
+
+[A spec for URLs in Clojure](https://conan.is/blogging/a-spec-for-urls-in-clojure.html)
+
+``` clojure
+(s/def ::json-string (s/with-gen
+                       (s/and string? #(try (json/decode %) true
+                                            (catch Exception _ false)))
+                       #(gen/fmap json/encode (s/gen any?))))
+                       
+(s/def ::uuid-string (s/with-gen
+                       (s/and string? #(try (UUID/fromString %) true
+                                            (catch Exception _ false)))
+                       #(gen/fmap str (s/gen uuid?))))
+                       
+;; Using https://github.com/dm3/clojure.java-time                       
+(s/def ::date-string (s/with-gen
+                       (s/and string? #(try (java-time/local-date-time %)
+                                            (catch Exception _ false)))
+                       #(gen/fmap (comp str (partial apply java-time/local-date-time))
+                          (s/gen (s/tuple (s/int-in 1970 2050)
+                                          (s/int-in 1 12)
+                                          (s/int-in 1 29)
+                                          (s/int-in 0 23)
+                                          (s/int-in 0 59)
+                                          (s/int-in 0 59))))))
+```                                                 
 
 # When to use collections, maps and regex
 
