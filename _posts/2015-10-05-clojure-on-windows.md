@@ -87,7 +87,7 @@ I like how iTerm allows the current buffer to be cleared with `Alt+K`.  I can't 
  
      print("\e echo -e '\0033\0143' \n")  
      
-Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.  What this does is type a command to clear the buffer and press enter for you, but you won't want this command clogging up your bash history.  Once you've got Git Bash on the go (see below), you can tell it to leave all `echo` commands such as this one out of your history by adding this to your `.bash_profile`:
+Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.  What this does is type a command to clear the buffer and press enter for you, but you won't want this command clogging up your bash history.  You can leave all `echo` commands such as this one out of your history by adding this to your `.bash_profile`:
   
     export HISTIGNORE=echo*
     
