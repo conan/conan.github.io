@@ -93,7 +93,7 @@ Note that this actually clears the buffer, rather than just scrolling to the end
     
 ## Git 
 
-Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings (except notepad), but many Linux and OSX tools can't cope with CRLF.  I always set
+Conventional wisdom is to set `core.autocrlf` to `true` on Windows, but I think this is wrong.  The idea is that because you're on Windows, you need CRLF line endings.  I've never come across a Windows tool that doesn't correctly handle LF line endings (except notepad), but many Linux and OSX tools can't cope with CRLF; plus I'm in Linux for all terminal activities.  I always set
 
     git config --global core.autocrlf input
     
