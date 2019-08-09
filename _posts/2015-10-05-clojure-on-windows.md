@@ -212,7 +212,7 @@ Change the 8s for 9s if you want Java 9 (may or may not apply to the repo name).
 
 ## Clojure CLI
 
-Follow the [official instructions](https://clojure.org/guides/getting_started#_installation_on_linux) to install the clojure cli tools in bash in WSL. Cursive will use its own, built-in version for now (see below), although the [Clojure CLI tools for Windows](https://clojure.org/guides/getting_started#_installation_on_windows) are coming.
+Follow the [official instructions](https://clojure.org/guides/getting_started#_installation_on_linux) to install the clojure cli tools in bash in WSL. Cursive will use its own, built-in version for now (see below), although the [Clojure CLI tools for Windows](https://github.com/clojure/tools.deps.alpha/wiki/clj-on-Windows) are coming.
 
 ## Leiningen
 
