@@ -65,7 +65,7 @@ Conemu now asks you which terminal you want to use when you first start it, so m
 
 Go to Settings > Startup > Tasks and edit `{Bash::bash}` if it already exists (or press the + button at the bottom of the list if it doesnt and set the command in the big box to be as above). Set the task up to have the name `Bash::bash`, check all the boxes, set the task parameters to be:
 
-    /icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1804.2018.817.0_x64__79rhkp1fndgsc\ubuntu.exe"
+    /dir %CD% /icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1804.2018.817.0_x64__79rhkp1fndgsc\ubuntu.exe"
     
 This will get you a nice icon.  If you've got a slightly different version of Ubuntu, the path might be slightly different; to find it, open the Start menu, search for "Ubuntu", right click on the Ubuntu command result and choose "Open file location".
     
