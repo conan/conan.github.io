@@ -22,15 +22,10 @@ The best solution is to install the [Windows Subsystem for Linux](https://docs.m
     
 ## Windows Terminal (Preview)
 
+* [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+* [Windows Terminal (Preview)](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701)
+
 The best thing is to install a WSL distro before installing Windows Terminal, and it'll simply be available in the dropdown; if not you can [add WSL to Windows Terminal manually](https://windowsloop.com/add-ubuntu-to-windows-terminal/).  You can set the default by opening Settings and finding the `guid` of the profile corresponding to your distro (by looking at the `name` properties of the profiles) and pasting it in at the top under the `defaultProfile` property.
-
-If you want a background image (instead of using Acrylic, the Windows transparency feature) then put an image (`background.jpg`) in `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState` and update the relevant profile with this:
-
-    "backgroundImage" : "ms-appdata:///roaming/background.jpg",
-    "backgroundImageOpacity" : 0.8,
-    "backgroundImageStrechMode" : "fill",
-    
-I recommend darkening the image in an editor because the opacity will only lighten it.
 
 ### Settings
 
@@ -39,45 +34,16 @@ Settings are additive, so things you add to your user `settings.json` get added 
 #### Keybindings
 
 ``` javascript
-   "keybindings": [
-        {
-            "command": "copy",
-            "keys": [
-                "ctrl+c"
-            ]
-        },
-        {
-            "command": "paste",
-            "keys": [
-                "ctrl+v"
-            ]
-        },
-        {
-            "command": "newTab",
-            "keys": [
-                "ctrl+n"
-            ]
-        },
-        {
-            "command": "newTab",
-            "keys": [
-                "ctrl+t"
-            ]
-        },
-        {
-            "command": "splitHorizontal",
-            "keys": [
-                "ctrl+shift+h"
-            ]
-        },
-        {
-            "command": "splitVertical",
-            "keys": [
-                "ctrl+shift+v"
-            ]
-        }
-    ]
+ "keybindings": [
+    {"command": "copy", "keys": ["ctrl+c"]},
+    {"command": "paste", "keys": ["ctrl+v"]},
+    {"command": "newTab", "keys": ["ctrl+n"]},
+    {"command": "newTab", "keys": ["ctrl+t"]},
+    {"command": "splitHorizontal", "keys": ["ctrl+shift+h"]},
+    {"command": "splitVertical", "keys": ["ctrl+shift+v"]}
+ ]
 ```
+
 #### Profiles
 
 Note that the WSL startingDirectory can be set, but you have to use different syntax compared to profiles for cmd and PowerShell:
@@ -98,7 +64,11 @@ Note that the WSL startingDirectory can be set, but you have to use different sy
             "useAcrylic": false
         },
 ```
+
 #### Colour schemes
+
+Here's a handy guide to [Rolling your own colour scheme](https://dev.to/teckert/roll-your-own-color-scheme-in-windows-terminal-466b). I use [Dracula](https://github.com/dracula/windows-terminal):
+
 ``` javascript
     "schemes": [
         {
@@ -124,6 +94,17 @@ Note that the WSL startingDirectory can be set, but you have to use different sy
         }
     ],
 ```
+
+### Background Image
+
+If you want a background image (instead of using Acrylic, the Windows transparency feature) then put an image (`background.jpg`) in `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState` and update the relevant profile with this:
+
+    "backgroundImage" : "ms-appdata:///roaming/background.jpg",
+    "backgroundImageOpacity" : 0.8,
+    "backgroundImageStrechMode" : "fill",
+    
+I recommend darkening the image in an editor because the opacity will only lighten it.
+
 ## Mount point (for Docker)
 
 WSL mounts your disk to `/mnt/c/`, but it would be nice if it was simply at `/c/` (and you'll need this if you want to run Docker inside WSL). Follow the instructions in the "Ensure Volume Mounts Work" section of this guide to [Using Docker in WSL](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly).
