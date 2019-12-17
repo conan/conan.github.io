@@ -8,9 +8,9 @@ comments: true
 ---
 
 # Introduction
-### Updated: 09/08/2019
+### Updated: 17/12/2019
 
-Most Clojure developers use Linux or OSX, and the community is slightly biased towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason, primarily with the [Cursive plugin for Intellij](https://cursive-ide.com).  Clojure development on Windows is smooth, and this is a guide to get you started (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
+Most Clojure developers use Linux or OSX, and the community is slightly biased towards those platforms.  Nevertheless, there are plenty of us who use Windows for whatever reason, primarily with the [Cursive plugin for Intellij](https://cursive-ide.com) (although the [Calva plugin for VS Code](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva) is getting much better, and VS Code has the advantage of being able to run inside WSL)  Clojure development on Windows is smooth, and this is a guide to get you started (and help me remember how to do it).  Note that a lot of this is not specific to Clojure.
 
 You can read more about the choices made by the wider Clojure community in Cognitect's [State of Clojure](https://clojure.org/news/2019/02/04/state-of-clojure-2019) survey results.
 
@@ -18,13 +18,11 @@ This guide shows how to set up a Clojure development environment using Intellij/
 
 # Terminal setup
 
-The best solution is to install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), and to use it with [ConEmu](https://conemu.github.io/).
+The best solution is to install the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), and to use it with the [Windows Terminal (Preview)](https://www.microsoft.com/en-us/p/windows-terminal-preview/9n0dx20hk701), which is still in beta but is already very good. Good alternatives can be found in [ConEmu](https://conemu.github.io/) (previously my terminal of choice) and [Hyper](https://hyper.is/).
     
 ## Windows Terminal (Preview)
 
-The Microsoft team have released a new [Windows Terminal](https://www.microsoft.com/en-gb/p/windows-terminal-preview/9n0dx20hk701) that supports tabs, resizing and lots of other nice things.  It's usable but **not ready for primetime** (too many crashes, copy/paste isn't quite sane yet, etc.). I expect it'll be my preferred solution by the end of 2019.
-
-If you've already enabled WSL and installed a distro, it'll simply be available in the dropdown.  You can set the default by opening Settings and finding the `guid` of the profile corresponding to your distro (by looking at the `name` properties of the profiles) and pasting it in at the top under the `defaultProfile` property.
+The best thing is to install a WSL distro before installing Windows Terminal, and it'll simply be available in the dropdown; if not you can [add WSL to Windows Terminal manually](https://windowsloop.com/add-ubuntu-to-windows-terminal/).  You can set the default by opening Settings and finding the `guid` of the profile corresponding to your distro (by looking at the `name` properties of the profiles) and pasting it in at the top under the `defaultProfile` property.
 
 If you want a background image (instead of using Acrylic, the Windows transparency feature) then put an image (`background.jpg`) in `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\RoamingState` and update the relevant profile with this:
 
@@ -33,6 +31,102 @@ If you want a background image (instead of using Acrylic, the Windows transparen
     "backgroundImageStrechMode" : "fill",
     
 I recommend darkening the image in an editor because the opacity will only lighten it.
+
+### Settings
+
+Settings are additive, so things you add to your user `settings.json` get added on top of the defaults; you can find the defaults by holding down `Alt` whilst clicking on the Settings option in Windows Terminal.  Here are some settings I like.
+
+#### Keybindings
+
+``` javascript
+   "keybindings": [
+        {
+            "command": "copy",
+            "keys": [
+                "ctrl+c"
+            ]
+        },
+        {
+            "command": "paste",
+            "keys": [
+                "ctrl+v"
+            ]
+        },
+        {
+            "command": "newTab",
+            "keys": [
+                "ctrl+n"
+            ]
+        },
+        {
+            "command": "newTab",
+            "keys": [
+                "ctrl+t"
+            ]
+        },
+        {
+            "command": "splitHorizontal",
+            "keys": [
+                "ctrl+shift+h"
+            ]
+        },
+        {
+            "command": "splitVertical",
+            "keys": [
+                "ctrl+shift+v"
+            ]
+        }
+    ]
+```
+#### Profiles
+
+Note that the WSL startingDirectory can be set, but you have to use different syntax compared to profiles for cmd and PowerShell:
+
+``` javascript
+        {
+            "backgroundImage": "ms-appdata:///roaming/background.jpg",
+            "backgroundImageOpacity": 0.3,
+            "backgroundImageStrechMode": "fill",
+            "colorScheme": "Dracula",
+            "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+            "fontFace": "Consolas",
+            "fontSize": 14,
+            "hidden": false,
+            "name": "Ubuntu",
+            "source": "Windows.Terminal.Wsl",
+            "startingDirectory": "//wsl$/Ubuntu/home/conan/dev",
+            "useAcrylic": false
+        },
+```
+#### Colour schemes
+``` javascript
+    "schemes": [
+        {
+            "background": "#282A36",
+            "black": "#21222C",
+            "blue": "#BD93F9",
+            "brightBlack": "#6272A4",
+            "brightBlue": "#D6ACFF",
+            "brightCyan": "#A4FFFF",
+            "brightGreen": "#69FF94",
+            "brightPurple": "#FF92DF",
+            "brightRed": "#FF6E6E",
+            "brightWhite": "#FFFFFF",
+            "brightYellow": "#FFFFA5",
+            "cyan": "#8BE9FD",
+            "foreground": "#F8F8F2",
+            "green": "#50FA7B",
+            "name": "Dracula",
+            "purple": "#FF79C6",
+            "red": "#FF5555",
+            "white": "#F8F8F2",
+            "yellow": "#F1FA8C"
+        }
+    ],
+```
+## Mount point (for Docker)
+
+WSL mounts your disk to `/mnt/c/`, but it would be nice if it was simply at `/c/` (and you'll need this if you want to run Docker inside WSL). Follow the instructions in the "Ensure Volume Mounts Work" section of this guide to [Using Docker in WSL](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly).
     
 ## Colours and PS1
 
@@ -40,56 +134,6 @@ I can't be bothered to learn about ANSI escape sequences and XTERM colours and s
 
     source ~/.git-prompt.sh
     PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[38;5;197m\]$(__git_ps1 " (%s)")\[\033[00m\]$ '
-
-## ConEmu
-
-Install [ConEmu](https://conemu.github.io/).  It provides a tabbed, split environment that can host any other consoles. It's worth having a look through all the settings as it's extremely customisable, but here are a few key ones. 
-
-### Buffer size
-
-You want a long buffer.  You can't have a infinite one like on Linux, but you can make it long in Settings > General > Size & Pos > Long console output.  Set it to `32766` (the maximum).
-
-### One tab per group
-
-When displaying multiple consoles in a window, I want them all also to be within a single tab.  Go to Settings > Main > Tab bar and check the "One tab per group" checkbox.
-
-### Copy/Pasting
-
-There are a number of settings related to copy/pasting behaviour, but there's one in particular that I find annoying.  ConEmu will pop up a warning menu if you paste more than 200 characters or an enter keypress by default, but you can turn these off in the Settings > Keys & Macro > Paste section under "Confirm <Enter> keypress" and "Confirm pasting more than X chars". 
-
-### Set Bash for Windows as default terminal
-
-Conemu now asks you which terminal you want to use when you first start it, so make sure WSL is installed and working first, and select it.  For reference (Conemu will set this for you), your `{Bash:bash}` command will look like this:
-
-    set "PATH=%ConEmuBaseDirShort%\wsl;%PATH%" & %ConEmuBaseDirShort%\conemu-cyg-64.exe --wsl -cur_console:pm:/mnt
-
-Go to Settings > Startup > Tasks and edit `{Bash::bash}` if it already exists (or press the + button at the bottom of the list if it doesnt and set the command in the big box to be as above). Set the task up to have the name `Bash::bash`, check all the boxes, set the task parameters to be:
-
-    /dir %CD% /icon "C:\Program Files\WindowsApps\CanonicalGroupLimited.UbuntuonWindows_1804.2018.817.0_x64__79rhkp1fndgsc\ubuntu.exe"
-    
-This will get you a nice icon.  If you've got a slightly different version of Ubuntu, the path might be slightly different; to find it, open the Start menu, search for "Ubuntu", right click on the Ubuntu command result and choose "Open file location".
-    
-Don't forget to press the "Save settings" button at the bottom.
-
-_NOTE: Getting the current directory in the tab title for WSL Bash is a bit [more involved](http://stackoverflow.com/questions/39974959/conemu-with-bash-show-folder-in-tab-bar), and I've never got it working._
-
-### Keyboard shortcuts
-
-These are some keyboard shortcuts I use to duplicate what iTerm got me used to.  Edit them by going to Settings > Keys & Macro.
-
-#### Split horizontal/vertical
-
-iTerm got me used to splitting terminal windows horizontally and vertically, filling the other half with a duplicate terminal.  The user shortcuts are called "Split: Duplicate active 'shell' split to bottom" and "Split: Duplicate active 'shell' split to right.  I use `Ctrl+Shift+H` and `Ctrl+Shift+V`.
-
-#### Clear buffer shortcut
-
-I like how iTerm allows the current buffer to be cleared with `Alt+K`.  I can't reproduce this behaviour exactly here (something to do with [not clearing buffers of running programs](http://superuser.com/questions/898426/clear-console-buffer-in-conemu-with-cygwin)), but it is possible to clear the buffer with `Alt+K` when no other command is running, by going to Settings > Keys & Macro, and adding a shortcut in one of the Macro slots.  Set the Hotkey to be `Alt+K` and the Description to be:
- 
-     print("\e echo -e '\0033\0143' \n")  
-     
-Note that this actually clears the buffer, rather than just scrolling to the end of it, which is very useful when running tests and things.  What this does is type a command to clear the buffer and press enter for you, but you won't want this command clogging up your bash history.  You can leave all `echo` commands such as this one out of your history by adding this to your `.bash_profile`:
-  
-    export HISTIGNORE=echo*
     
 ## Git 
 
@@ -171,7 +215,7 @@ Leiningen uses GPG for repo authentication, and it works fine in bash on Windows
      
 That'll walk you through creating a key, and show it once you're done.  You'll need to put your leiningen credentials in a file called `%userprofile%/.lein/credentials.clj`, and it should look something like this:
 
-    {#"my\.datomic\.com" {:username "conan@your-email-address.com" :password "your-password"}}
+    {#"my\.datomic\.com" {:username "your@email-address.com" :password "your-password"}}
 
 Put in here your plaintext username/password for each authenticated leiningen repo you use.  Then encrypt it with GPG, but GPG is so crap that there's a trick to it:
 
@@ -187,26 +231,16 @@ It's still gone and written a 0-bytes file called `credentials.clj.gpg`, which w
         del credentials.clj.gpg
         rename credentials.clj.gpg.2 credentials.clj.gpg
 
-# JDK 8
+# JDK 11
 
-To install JDK 8 in WSL (JDK 8 is reliable for Clojure):
-
-## Oracle
-
-    sudo add-apt-repository ppa:webupd8team/java
-    sudo apt update
-    sudo apt install oracle-java8-installer
-    sudo apt install oracle-java8-set-default
-    
-Change the 8s for 9s if you want Java 9 (may or may not apply to the repo name).
+To install OpenJDK 11 in WSL Ubuntu (different versions might have different needs):
 
 ## OpenJDK
 
-    sudo add-apt-repository ppa:openjdk-r/ppa
     sudo apt update -y
-    sudo apt install -y openjdk-8-jdk 
+    sudo apt install openjdk-11-jdk
     sudo apt install ca-certificates-java
-    update-ca-certificates -f
+    sudo update-ca-certificates -f
 
 # Dependency & Build tools
 
@@ -220,20 +254,20 @@ Follow the [official instructions](https://leiningen.org/#install) to install it
 
 # IDE
 
-* [IntelliJ](https://www.jetbrains.com/idea/download/) offers the most sophisticated development experience on Windows, matched only by Emacs. 
+* [IntelliJ](https://www.jetbrains.com/idea/download/) with [Cursive](https://cursive-ide.com/) offers the most sophisticated development experience on Windows, matched only by Emacs. Note that it's not free.
 * [Emacs](https://www.gnu.org/software/emacs/download.html) or [Spacemacs](https://github.com/syl20bnr/spacemacs) - but if you're using Emacs, are you sure you wouldn't prefer OSX or Linux?  I don't know much about Emacs and Clojure on Windows, but I know you'll want [Cider](https://github.com/clojure-emacs/cider) and some refactorings like [clj-refactor](https://github.com/clojure-emacs/clj-refactor.el) 
-* [VS Code](https://code.visualstudio.com/) keeps getting better, and has a great Clojure plugin called [Calva](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva)
-* [Atom](https://atom.io/) GitHub's desktop editor written in JavaSCript, with Clojure support from [ProtoREPL](https://atom.io/packages/proto-repl)
+* [VS Code](https://code.visualstudio.com/) keeps getting better (in part thanks to help from [Clojurists Together](https://www.clojuriststogether.org/)), and has a great Clojure plugin called [Calva](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.calva) - although it's still short in some areas, such as formatting.
+* [Atom](https://atom.io/) GitHub's desktop editor written in JavaSCript, with Clojure support from [ProtoREPL](https://atom.io/packages/proto-repl); this might be losing traction however.
 
 For now I'm assuming you're using IntelliJ.
 
-## Line endings and file encodings
+## Cursive & Intellij
+
+Clojure development in IntelliJ is made possible by the fantastic [Cursive](https://cursive-ide.com/).  Head over to the [User Guide](https://cursive-ide.com/userguide/), which will explain how to download and install the IntelliJ plugin. 
+
+### Line endings and file encodings
 
 Don't forget to set your line endings to LF in File > Line separators, and set your file encoding to UTF-8 by going to Settings > Editor > File Encodings.  That'll stop your non-Windows colleagues getting upset because their tools can't cope. Do this for every project, in particular try to remember to do this when you create a new one.  I tend to create new projects from inside WSL to ensure this is correct.  You can see what line endings you're using in the bottom right of Intellij's status bar.
-
-## Cursive
-
-Clojure development in IntelliJ is made possible by the fantastic [Cursive](https://cursiveclojure.com/).  Head over to the [Getting Started](https://cursiveclojure.com/userguide/) guide, which will explain how to download and install the IntelliJ plugin. 
 
 ### Structural Editing
 
@@ -281,4 +315,19 @@ If you're using tools.deps in a project with a `deps.edn` file, you'll need the 
 
 ### Figwheel
 
-If you write ClojureScript, you're probably using [figwheel-main](https://github.com/bhauman/figwheel-main), which replaces the deprecated [lein-figwheel](https://github.com/bhauman/lein-figwheel).  It's possible to [run figwheel-main in an Intellij REPL](https://github.com/bhauman/figwheel-main/blob/master/docs/docs/cursive.md) (and you can also [run lein-figwheel in an Intellij REPL](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
+If you write ClojureScript, you may be using [figwheel-main](https://github.com/bhauman/figwheel-main).  It's possible to [run figwheel-main in an Intellij REPL](https://github.com/bhauman/figwheel-main/blob/master/docs/docs/cursive.md) (and you can also [run lein-figwheel in an Intellij REPL](https://github.com/bhauman/lein-figwheel/wiki/Running-figwheel-in-a-Cursive-Clojure-REPL).
+
+### Shadow-cljs
+
+You can [Use shadow-cljs with Cursive](https://shadow-cljs.github.io/docs/UsersGuide.html#_cursive), I recommend going down the route of using a leiningen `project.clj` for dependencies as it works very well. Also, I like to be able to restart my entire cljs compile/watch/hot-reload with a single click (i.e. not connecting to a remote nREPL), so I set up a local clojure REPL build config using clojure.main and passing the path to the following script in the Parameters (this is based on the figwheel approach above, with help from [Thomas Heller](https://github.com/thheller) - thanks!):
+
+``` clojure
+(require
+  '[shadow.cljs.devtools.api :as api]
+  '[shadow.cljs.devtools.server :as server])
+(server/start!)
+(api/watch :app)
+(api/repl :app)
+```
+
+It's noisy (complains about version mismatches on startup, these are warnings and can be ignored) but it compiles everything right there in your cljs REPL.
