@@ -31,6 +31,8 @@ The best thing is to install a WSL distro before installing Windows Terminal, an
 
 Settings are additive, so things you add to your user `settings.json` get added on top of the defaults; you can find the defaults by holding down `Alt` whilst clicking on the Settings option in Windows Terminal.  Here are some settings I like.
 
+    "copyOnSelect": true,
+
 #### Keybindings
 
 ``` javascript
