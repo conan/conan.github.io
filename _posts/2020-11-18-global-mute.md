@@ -9,7 +9,7 @@ published: true
 
 Can't remember the mute shortcut?  Mute doesn't work because you're working in another window?  This post is for you.  I'll explain how to make all your mute keyboard shortcuts the same, and how to make them work all the time* - even when in another application.
 
-* If you use Windows and Google Chrome.
+*If you use Windows and Google Chrome. Coming soon: Slack, Microsoft Teams
 
 # Zoom
 
@@ -26,3 +26,5 @@ Meet doesn't have built-in support for global keyboard shortcuts, so we need a [
 Paste [chrome://extensions/shortcuts](chrome://extensions/shortcuts) into chrome. Find the "Mute for Google Meet™" section.  Set the mute keyboard shortcut to the same one you chose for Zoom, and change it from "In Chrome" to "Global":
 
 ![Mute for Google Meet Settings](/assets/images/chrome-settings-extensions-mute.png)
+
+
