@@ -1,6 +1,5 @@
 # Site settings
 title: Conan Is Blogging
-email: ***REMOVED***
 meta-description: > # 
   Technology blog about Clojure and things, by Conan Cook
 description: > # this means to ignore newlines until "baseurl:"
