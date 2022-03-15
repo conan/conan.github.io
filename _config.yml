@@ -7,7 +7,7 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://conan.is" # the base hostname & protocol for your site
 permalink: /blogging/:title.html
-twitter_username: ***REMOVED***
+twitter_username: 
 github_username: conan
 linkedin_username: conancook
 cv_url: http://conan.is/cv/
