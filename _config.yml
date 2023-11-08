@@ -9,7 +9,7 @@ url: "http://conan.is" # the base hostname & protocol for your site
 permalink: /blogging/:title.html
 github_username: conan
 linkedin_username: conancook
-cv_url: http://conan.is/cv/
+cv_url: https://conan.is/cv/
 plugins:
   - jekyll-redirect-from
   - jekyll-sitemap
